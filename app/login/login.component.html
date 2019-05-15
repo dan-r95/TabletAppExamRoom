@@ -1,0 +1,12 @@
+<ActionBar title="Login" class="action-bar">
+</ActionBar>
+
+<ScrollView class="page">
+    <StackLayout class="home-panel">
+        <TextField [(model)]="user.email" hint="Email Address" keyboardType="email" autocorrect="false"
+            autocapitalizationType="none"></TextField>
+        <TextField  [(model)]="user.password" hint="Password" secure="true"></TextField>
+
+        <Button text="Sign in" (tap)="login()"></Button>
+    </StackLayout>
+</ScrollView>
