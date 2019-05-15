@@ -29,9 +29,21 @@ export class HomeComponent implements OnInit {
 
     ngOnInit(): void {
         this.data.push({
-            name: "Bulbasaur",
-            src: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
-            description: "Bulbasaur can be seen napping in bright sunlight. There is a seed on its back. By soaking up the sun’s rays, the seed grows progressively larger."
+            name: "Einkaufsliste",
+            src: "",
+            description: `EINKAUFSLISTE:  Kryptonit 10µg
+Fischfutter 2x
+Brot 1x
+Stickstoff 20l
+Kaffee:
+Zum Frühstück trinke ich einen Pott Kaffee  und einen Espresso . 
+Oder ich trinke einen Pott Kaffee und einen Latte Macchiato .
+Was ist das Fazit?
+` });
+        this.data.push({
+            name: "Anderes",
+            src: "",
+            description: `foo bar  `
         });
        
     }
