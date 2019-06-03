@@ -1,4 +1,6 @@
 # See: https://python-evdev.readthedocs.io/en/latest/tutorial.html
+from subprocess import *
+from sys import *
 from select import select
 from evdev import InputDevice
 
@@ -9,10 +11,22 @@ class GameManager:
         # define here an variable for each usb reader we are using
         print("listening over usb...")
         # all connected readers are listed in /dev/input/by-path
+        self.dev1 = None
+        self.dev2 = None
+
+        self.idealCombination = None
+        self.readCombination = None
+
+        # TODO: write exception handling when vars are None after reading
+
+    # Fill devices (static amount right now)
+    @classmethod
+    def getDevices(self):
         self.dev1 = "/dev/input/by-path/platform-3f980000.usb-usb-0:1.2.3:1.0-event-kbd"
         self.dev2 = "/dev/input/by-path/platform-3f980000.usb-usb-0:1.2.4:1.0-event-kbd"
 
         # add devices here
+        # TODO: handle expection when none are found
         self.devices = map(InputDevice, (self.dev1, self.dev2))
         self.devices = {dev.fd: dev for dev in self.devices}
         print(self.devices)
@@ -103,6 +117,18 @@ class GameManager:
                         print("Steckdose an!!")
                         break
 
+    # follow other steps:
+    # https://mathematica.stackexchange.com/questions/4643/how-to-use-mathematica-functions-in-python-programs
+    # hacky way to call wolfram alpha from python
+    @classmethod
+    def getWolframOutput(cls, expression):
+        #!/usr/bin/python
+        command = '/usr/local/bin/runMath'
+        parameter = expression
+        call([command, parameter])
+
 
 g = GameManager()
+g.getDevices()
+g.getWolframOutput('Integrate[Log[x],x]')
 g.beginReading(g)
