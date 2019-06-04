@@ -2,14 +2,19 @@
 from subprocess import *
 from sys import *
 from select import select
-from evdev import InputDevice
+from evdev import InputDevice, categorize, ecodes
+import re
+import subprocess
+import usb
 
+# TODO: delete input if already existing (No input should be twice)
+ 
 
 class GameManager:
 
     def __init__(self):
         # define here an variable for each usb reader we are using
-        print("listening over usb...")
+        #print("listening over usb...")
         # all connected readers are listed in /dev/input/by-path
         self.dev1 = None
         self.dev2 = None
@@ -18,21 +23,23 @@ class GameManager:
         self.readCombination = None
 
         # TODO: write exception handling when vars are None after reading
-
+    # TODO: fill device names automatically
     # Fill devices (static amount right now)
     @classmethod
     def getDevices(self):
-        self.dev1 = "/dev/input/by-path/platform-3f980000.usb-usb-0:1.2.3:1.0-event-kbd"
-        self.dev2 = "/dev/input/by-path/platform-3f980000.usb-usb-0:1.2.4:1.0-event-kbd"
+        self.dev1 = "/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.3:1.0-event-kbd"
+        self.dev2 = "/dev/input/by-path/platform-3f980000.usb-usb-0:1.3:1.0-event-kbd"
+
 
         # add devices here
         # TODO: handle expection when none are found
         self.devices = map(InputDevice, (self.dev1, self.dev2))
         self.devices = {dev.fd: dev for dev in self.devices}
-        print(self.devices)
+        #print(self.devices)
 
         self.idealCombination = self.initializeSolutionCombination()
         self.readCombination = self.initializeCombination()
+        print(self.readCombination)
 
     # initialize the correct pairs and to be read pairs
     # TODO: expand with parameters: number of readers and codes which are the
@@ -41,8 +48,8 @@ class GameManager:
     @classmethod
     def initializeSolutionCombination(cls):
         # init values which are the solution
-        reader = ["usb-3f980000.usb-1.2.4/input0",
-                  "usb-3f980000.usb-1.2.3/input0"]
+        reader = ["usb-3f980000.usb-1.3/input0",
+                  "usb-3f980000.usb-1.1.3/input0"]
         # the codes to unlock for each reader
         tagValues = ["0010210257", "0000405226"]
         idealCombination = {}
@@ -52,18 +59,18 @@ class GameManager:
             idealCombination[reader[i]] = tagValues[i]
 
             # read the dict
-        print(idealCombination)
+        #print(idealCombination)
         for key, val in idealCombination.items():
             print(val)
-            print(key)
-            # print(idealCombination["platform-3f980000.usb-usb-0:1.2.3:1.0-event-kbd"])
+            #print(key)
+            #print(idealCombination["platform-3f980000.usb-usb-0:1.2.3:1.0-event-kbd"])
         return idealCombination
 
     @classmethod
-    def initializeCombination(cls):
+    def initializeCombination(cls):   #devicenames
         # init values to be read and filled out
-        reader = ["usb-3f980000.usb-1.2.4/input0",
-                  "usb-3f980000.usb-1.2.3/input0"]
+        reader = ["usb-3f980000.usb-1.3/input0", 
+                  "usb-3f980000.usb-1.1.3/input0"]
         readValues = [None, None]  # the codes we will read
 
         readCombination = {}
@@ -77,7 +84,9 @@ class GameManager:
     @staticmethod
     # return true if both objects have the same values
     def checkIfOkay(self, ideal, read):
+        print("ideal: ")
         print(ideal)
+        print(" read in: ")
         print(read)
         for key, _ in self.idealCombination.items():
             if self.idealCombination[key] != self.readCombination[key]:
@@ -88,7 +97,7 @@ class GameManager:
     def writeToDictionary(self, deviceName, val, dictionary):
         dictionary[deviceName] = val
 
-    @staticmethod
+    @classmethod
     def beginReading(self):
         for dev in self.devices.values():
             print(dev)
@@ -99,15 +108,22 @@ class GameManager:
         while True:
             r, _, _ = select(self.devices, [], [])
             for fd in r:
+                print(r)
+                print("fd: " + str(fd))
                 for event in self.devices[fd].read():  # fd needed?
-                    readValue = str(input())  # raw_input
+                    print(event)
+                    readValue = str(raw_input())  # raw_input
                     # enter into an endless read-loop
                     # if(event.code == 28):
+                    if event.type == ecodes.EV_KEY:
+                        print(categorize(event))
                     devicePhysName = self.devices[fd].phys
-                    print(event)
-                    print("Nachricht :" + str(event))
+                    print("was ist unser name?")
+                    print(devicePhysName)
+                    #print(event)
+                    #print("Nachricht :" + str(event))
                     # if codeTag1 = event.code
-                    self.writeToDictionary(
+                    self.writeToDictionary(self, 
                         devicePhysName, readValue, self.readCombination)
                     # returns true if both data structures have equal values
                     result = self.checkIfOkay(
@@ -121,14 +137,39 @@ class GameManager:
     # https://mathematica.stackexchange.com/questions/4643/how-to-use-mathematica-functions-in-python-programs
     # hacky way to call wolfram alpha from python
     @classmethod
-    def getWolframOutput(cls, expression):
+    def getWolframOutput(self, expression):
         #!/usr/bin/python
         command = '/usr/local/bin/runMath'
         parameter = expression
         call([command, parameter])
 
 
+    @classmethod
+    def getUsbDevs(self):
+        device_re = re.compile("Bus\s+(?P<bus>\d+)\s+Device\s+(?P<device>\d+).+ID\s(?P<id>\w+:\w+)\s(?P<tag>.+)$", re.I)
+        df = subprocess.check_output("lsusb")
+        devices = []
+        for i in df.split('\n'):
+            if i:
+                info = device_re.match(i)
+                if info:
+                    dinfo = info.groupdict()
+                    dinfo['device'] = '/dev/bus/usb/%s/%s' % (dinfo.pop('bus'), dinfo.pop('device'))
+                    devices.append(dinfo)
+        print(devices)
+
+
+    def getUsbDevvs(self):
+        busses = usb.busses()
+        for bus in busses:
+            devices = bus.devices
+            for dev in devices:
+                print "Device:", str(dev)
+                print "  idVendor: %d (0x%04x)" % (dev.idVendor, dev.idVendor)
+                print "  idProduct: %d (0x%04x)" % (dev.idProduct, dev.idProduct)
+
 g = GameManager()
+#g.getUsbDevvs()
 g.getDevices()
-g.getWolframOutput('Integrate[Log[x],x]')
-g.beginReading(g)
+#g.getWolframOutput('Integrate[Log[x],x]')
+g.beginReading()
