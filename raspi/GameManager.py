@@ -86,7 +86,7 @@ class GameManager:
         reader = [None] * len(devices)   # fill the reader object
         j = 0
         for i in keys:
-            reader[j] = devices[i].phys
+            reader[j] = devices[i].path
             j += 1
 
         idealCombination = {
@@ -106,7 +106,7 @@ class GameManager:
         reader = [None] * len(devices)   # fill the reader object
         j = 0
         for i in keys:
-            reader[j] = devices[i].phys
+            reader[j] = devices[i].path
             j += 1
         # the codes we will read of length of devices
         readValues = [None] * len(devices)
@@ -142,7 +142,10 @@ class GameManager:
         # get key where reader name is deviceName by iterating through the device and finding the index
         j = 0
         for i in readCombination["deviceName"]:
-            #print(readCombination["deviceName"][j])
+            print("##################")
+            print(readCombination["deviceName"][j])
+            print(key)
+            print("##################")
             if readCombination["deviceName"][j] == key:
                 readCombination["value"][j] = value
                 break
@@ -167,9 +170,12 @@ class GameManager:
                     print(categorize(event))
                     print(device.path, evdev.categorize(event), sep=': ')
                     # print(categorize(event))
-                    readValue = str(input())  # raw_input
+                    #readValue = str(input())  # raw_input
+                    if device.path=="/dev/input/by-path/pci-0000:00:14.0-usb-0:4:1.0-event-kbd":
+                        readValue = "number 1"
+                    else : readValue= "number 2"
                     # enter into an endless read-loop
-                    devicePhysName = device.phys
+                    devicePhysName = device.path
                     print(devicePhysName)
                     # print(event)
                     # print("Nachricht :" + str(event))
@@ -185,6 +191,8 @@ class GameManager:
                         break
 
         for device in self.DEFF1, self.DEFF2:
+            device.grab()  #no more raw_input
+            # NEXT: read out the vals
             print(device)
             asyncio.ensure_future(print_events(device))
 
