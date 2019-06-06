@@ -1,7 +1,5 @@
 # See: https://python-evdev.readthedocs.io/en/latest/tutorial.html
-from subprocess import *
 import evdev
-from sys import *
 from select import select
 from evdev import InputDevice, categorize, ecodes
 import glob
@@ -20,7 +18,6 @@ class GameManager:
         self.readCombination = None
         self.selector = None
         self.currentDeviceName = None
-
 
     # Fill devices
     @classmethod
@@ -69,7 +66,8 @@ class GameManager:
         # the codes to unlock for each reader
         len(solution)
         # len(devices)
-        assert len(solution) == len(devices),  "length must be equal of solution provided and number of devices"
+        assert len(solution) == len(
+            devices), "length must be equal of solution provided and number of devices"
 
         keys = list(devices.keys())   # to have an index we can read from
         reader = [None] * len(devices)   # fill the reader object
@@ -128,7 +126,8 @@ class GameManager:
 
     @staticmethod
     def writeToDictionary(key, value, readCombination):
-        # get key where reader name is deviceName by iterating through the device and finding the index
+        # get key where reader name is deviceName by iterating through the
+        # device and finding the index
         j = 0
         for _ in readCombination["deviceName"]:
             if readCombination["deviceName"][j] == key:
@@ -153,10 +152,11 @@ class GameManager:
                         # create and dump the tag
                         tag = "".join(i.strip('KEY_') for i in container)
                         devicePhysName = device.path
-                       
+
                         self.writeToDictionary(
                             devicePhysName, tag, self.readCombination)
-                        # returns true if both data structures have equal values
+                        # returns true if both data structures have equal
+                        # values
                         result = self.checkIfOkay(
                             self, self.idealCombination, self.readCombination)
                         if result:
@@ -174,7 +174,6 @@ class GameManager:
 
         loop = asyncio.get_event_loop()
         loop.run_forever()
-
 
     # follow other steps:
     # https://mathematica.stackexchange.com/questions/4643/how-to-use-mathematica-functions-in-python-programs
