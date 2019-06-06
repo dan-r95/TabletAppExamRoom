@@ -2,19 +2,17 @@
 from subprocess import *
 from sys import *
 from select import select
-from evdev import InputDevice, categorize, ecodes
-import re
-import subprocess
-import usb
+from evdev import InputDevice
+import glob
+from os import listdir
+from os.path import isfile, join
 
-# TODO: delete input if already existing (No input should be twice)
- 
 
 class GameManager:
 
     def __init__(self):
         # define here an variable for each usb reader we are using
-        #print("listening over usb...")
+        print("listening over usb...")
         # all connected readers are listed in /dev/input/by-path
         self.dev1 = None
         self.dev2 = None
@@ -23,55 +21,80 @@ class GameManager:
         self.readCombination = None
 
         # TODO: write exception handling when vars are None after reading
-    # TODO: fill device names automatically
-    # Fill devices (static amount right now)
-    @classmethod
-    def getDevices(self):
-        self.dev1 = "/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.3:1.0-event-kbd"
-        self.dev2 = "/dev/input/by-path/platform-3f980000.usb-usb-0:1.3:1.0-event-kbd"
 
+    # Fill devices
+    @classmethod
+    def getDevices(self, solution):
+        # register all found devices
+        devices = glob.glob("/dev/input/by-path/*")
+        devicesMatching = []
+
+        # find devices we need (keyboard rfid reader) from /dev/input
+        for device in devices:
+            if 'usb' in device and 'event-kbd' in device:
+                devicesMatching.append(device)
 
         # add devices here
         # TODO: handle expection when none are found
-        self.devices = map(InputDevice, (self.dev1, self.dev2))
+        self.devices = map(InputDevice, devicesMatching)
         self.devices = {dev.fd: dev for dev in self.devices}
-        #print(self.devices)
 
-        self.idealCombination = self.initializeSolutionCombination()
-        self.readCombination = self.initializeCombination()
-        print(self.readCombination)
+        # ATTENTION the index does not start at zero here! - passed key to the list object
+        # for i in self.devices:
+        #    print(i)
+
+        self.idealCombination = self.initializeSolutionCombination(
+            self.devices, solution)
+        self.readCombination = self.initializeCombination(self.devices)
 
     # initialize the correct pairs and to be read pairs
     # TODO: expand with parameters: number of readers and codes which are the
     # solution
 
     @classmethod
-    def initializeSolutionCombination(cls):
+    def initializeSolutionCombination(cls, devices, solution):
+        # TODO: pass an object with the solution!
         # init values which are the solution
-        reader = ["usb-3f980000.usb-1.3/input0",
-                  "usb-3f980000.usb-1.1.3/input0"]
+
+        # FORMAT
+        # id                reader                  solution
+        #  3   usb-3f980000.usb-1.2.4/input0        0010210257
+
+        # print(devices.values())
+
         # the codes to unlock for each reader
-        tagValues = ["0010210257", "0000405226"]
-        idealCombination = {}
+        assert len(solution) == len(devices)
 
-        # fill the dict
-        for i in range(len(reader)):
-            idealCombination[reader[i]] = tagValues[i]
+        keys = list(devices.keys())   # to have an index we can read from
+        reader = [None] * len(devices)   # fill the reader object
+        j = 0
+        for i in keys:
+            reader[j] = devices[i].phys
+            j += 1
 
-            # read the dict
-        #print(idealCombination)
-        for key, val in idealCombination.items():
-            print(val)
-            #print(key)
-            #print(idealCombination["platform-3f980000.usb-usb-0:1.2.3:1.0-event-kbd"])
+        idealCombination = {
+            "key": keys,
+            "reader": reader,
+            "value": solution  # passed solution dict
+        }
+
+        print(idealCombination)
+
         return idealCombination
 
     @classmethod
-    def initializeCombination(cls):   #devicenames
-        # init values to be read and filled out
-        reader = ["usb-3f980000.usb-1.3/input0", 
-                  "usb-3f980000.usb-1.1.3/input0"]
-        readValues = [None, None]  # the codes we will read
+    def initializeCombination(cls, devices):
+        # init values in dictionary to be read and filled out
+        #print(devices[3].capabilities(verbose = True ))
+        #print(devices[3].leds(verbose = True ))
+        keys = list(devices.keys())   # to have an index we can read from
+        reader = [None] * len(devices)   # fill the reader object
+        j = 0
+        for i in keys:
+            reader[j] = devices[i].phys
+            j += 1
+        # the codes we will read of length of devices
+        readValues = [None] * len(devices)
 
         readCombination = {}
 
@@ -79,14 +102,20 @@ class GameManager:
         for i in range(len(reader)):
             readCombination[reader[i]] = readValues[i]
 
+        readCombination = {
+            "key": keys,
+            "reader": reader,
+            "value": readValues
+        }
+
+        print(readCombination)
+
         return readCombination
 
     @staticmethod
     # return true if both objects have the same values
     def checkIfOkay(self, ideal, read):
-        print("ideal: ")
         print(ideal)
-        print(" read in: ")
         print(read)
         for key, _ in self.idealCombination.items():
             if self.idealCombination[key] != self.readCombination[key]:
@@ -97,79 +126,48 @@ class GameManager:
     def writeToDictionary(self, deviceName, val, dictionary):
         dictionary[deviceName] = val
 
-    @classmethod
+    @staticmethod
     def beginReading(self):
-        for dev in self.devices.values():
-            print(dev)
-            # print(dev.capabilities(verbose=True))
-
         # adapted from
         # http://domoticx.com/nfc-rfid-hardware-usb-stick-syc-idic-usb-reader/
-        while True:
-            r, _, _ = select(self.devices, [], [])
-            for fd in r:
-                print(r)
-                print("fd: " + str(fd))
-                for event in self.devices[fd].read():  # fd needed?
-                    print(event)
-                    readValue = str(raw_input())  # raw_input
-                    # enter into an endless read-loop
-                    # if(event.code == 28):
-                    if event.type == ecodes.EV_KEY:
-                        print(categorize(event))
-                    devicePhysName = self.devices[fd].phys
-                    print("was ist unser name?")
-                    print(devicePhysName)
-                    #print(event)
-                    #print("Nachricht :" + str(event))
-                    # if codeTag1 = event.code
-                    self.writeToDictionary(self, 
-                        devicePhysName, readValue, self.readCombination)
-                    # returns true if both data structures have equal values
-                    result = self.checkIfOkay(
-                        self, self.idealCombination, self.readCombination)
-                    if result:
-                        # SOlution is found - Game over :)
-                        print("Steckdose an!!")
-                        break
+        for dev in self.devices.values():
+            while True:
+                r, _, _ = select(self.devices, [], [])
+                for fd in r:
+                    for event in self.devices[fd].read():  # fd needed?
+                        readValue = str(input())  # raw_input
+                        # enter into an endless read-loop
+                        # if(event.code == 28):
+                        devicePhysName = self.devices[fd].phys
+                        print(event)
+                        print("Nachricht :" + str(event))
+                        # if codeTag1 = event.code
+                        self.writeToDictionary(
+                            devicePhysName, readValue, self.readCombination)
+                        # returns true if both data structures have equal values
+                        result = self.checkIfOkay(
+                            self, self.idealCombination, self.readCombination)
+                        if result:
+                            # SOlution is found - Game over :)
+                            print("Steckdose an!!")
+                            break
 
     # follow other steps:
     # https://mathematica.stackexchange.com/questions/4643/how-to-use-mathematica-functions-in-python-programs
     # hacky way to call wolfram alpha from python
     @classmethod
-    def getWolframOutput(self, expression):
+    def getWolframOutput(cls, expression):
         #!/usr/bin/python
         command = '/usr/local/bin/runMath'
         parameter = expression
         call([command, parameter])
 
 
-    @classmethod
-    def getUsbDevs(self):
-        device_re = re.compile("Bus\s+(?P<bus>\d+)\s+Device\s+(?P<device>\d+).+ID\s(?P<id>\w+:\w+)\s(?P<tag>.+)$", re.I)
-        df = subprocess.check_output("lsusb")
-        devices = []
-        for i in df.split('\n'):
-            if i:
-                info = device_re.match(i)
-                if info:
-                    dinfo = info.groupdict()
-                    dinfo['device'] = '/dev/bus/usb/%s/%s' % (dinfo.pop('bus'), dinfo.pop('device'))
-                    devices.append(dinfo)
-        print(devices)
-
-
-    def getUsbDevvs(self):
-        busses = usb.busses()
-        for bus in busses:
-            devices = bus.devices
-            for dev in devices:
-                print "Device:", str(dev)
-                print "  idVendor: %d (0x%04x)" % (dev.idVendor, dev.idVendor)
-                print "  idProduct: %d (0x%04x)" % (dev.idProduct, dev.idProduct)
-
+# UPDATE the SOLUTION we need!
 g = GameManager()
-#g.getUsbDevvs()
-g.getDevices()
-#g.getWolframOutput('Integrate[Log[x],x]')
-g.beginReading()
+# fill our solution here
+# solution = ["0010210257", "0000405226"]
+solution = ["0010210257"]
+g.getDevices(solution)
+# g.getWolframOutput('Integrate[Log[x],x]')
+g.beginReading(g)
