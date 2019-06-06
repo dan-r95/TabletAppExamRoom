@@ -2,11 +2,11 @@
 from subprocess import *
 from sys import *
 from select import select
-from evdev import InputDevice
+from evdev import InputDevice, categorize, ecodes
 import glob
 from os import listdir
 from os.path import isfile, join
-
+from selectors import DefaultSelector, EVENT_READ
 
 class GameManager:
 
@@ -14,11 +14,9 @@ class GameManager:
         # define here an variable for each usb reader we are using
         print("listening over usb...")
         # all connected readers are listed in /dev/input/by-path
-        self.dev1 = None
-        self.dev2 = None
-
         self.idealCombination = None
         self.readCombination = None
+        self.selector = None
 
         # TODO: write exception handling when vars are None after reading
 
@@ -33,10 +31,19 @@ class GameManager:
         for device in devices:
             if 'usb' in device and 'event-kbd' in device:
                 devicesMatching.append(device)
-
+        print(devicesMatching)
+        
         # add devices here
         # TODO: handle expection when none are found
         self.devices = map(InputDevice, devicesMatching)
+        #for i in self.devices:
+        #    i.grab()
+        # This works because InputDevice has a `fileno()` method.
+        """self.selector = selectors.DefaultSelector()
+        for dev in self.devices:
+            self.selector.register(dev, selectors.EVENT_READ)
+        """
+
         self.devices = {dev.fd: dev for dev in self.devices}
 
         # ATTENTION the index does not start at zero here! - passed key to the list object
@@ -63,7 +70,9 @@ class GameManager:
         # print(devices.values())
 
         # the codes to unlock for each reader
-        assert len(solution) == len(devices),  "length must be equal of solution provided and number of devices" 
+        len(solution)
+        len(devices)
+        #assert len(solution) == len(devices),  "length must be equal of solution provided and number of devices" 
 
         keys = list(devices.keys())   # to have an index we can read from
         reader = [None] * len(devices)   # fill the reader object
@@ -111,10 +120,10 @@ class GameManager:
     @staticmethod
     # return true if both objects have the same values
     def checkIfOkay(self, ideal, read):
-        print("ideal: ")
+        """print("ideal: ")
         print(ideal)
         print("read: ")
-        print(read)
+        print(read)"""
         for key, _ in self.idealCombination.items():
             if self.idealCombination[key] != self.readCombination[key]:
                 return False
@@ -131,31 +140,62 @@ class GameManager:
             else:
                 j += 1
 
+
+    """async def print_events(device):
+        print(device)
+        async for event in device.async_read_loop(): 
+            print(device.path, evdev.categorize(event), sep=': ')
+    """
     @classmethod
     def beginReading(self):
         # adapted from
         # http://domoticx.com/nfc-rfid-hardware-usb-stick-syc-idic-usb-reader/
+        """while True:
+            for key, mask in self.selector.select():
+                device = key.fileobj
+                for event in device.read():
+                    print(event)  
+
+        """
+        """
+        for device in self.devices:
+            asyncio.ensure_future(self.print_events(device))
+
+        loop = asyncio.get_event_loop()
+        loop.run_forever()
+        """
+        
         for _ in self.devices.values():
             while True:
-                r, _, _ = select(self.devices, [], [])
+                r, w, x = select(self.devices, [], [])
+ 
                 for fd in r:
                     for event in self.devices[fd].read():
-                        readValue = str(input())  # raw_input
-                        # enter into an endless read-loop
-                        print(fd)
-                        devicePhysName = self.devices[fd].phys
-                        # print(event)
-                        #print("Nachricht :" + str(event))
-                        # if codeTag1 = event.code
-                        self.writeToDictionary(
-                            fd, readValue, self.readCombination)
-                        # returns true if both data structures have equal values
-                        result = self.checkIfOkay(
-                            self, self.idealCombination, self.readCombination)
-                        if result:
-                            # Solution is found - Game over :)
-                            print("Steckdose an!!")
-                            break
+                        if event.type == ecodes.EV_KEY:
+                            print(categorize(event))
+                            readValue = str(input())  # raw_input
+                            # enter into an endless read-loop
+                            print(event)
+                            print(fd)
+                            devicePhysName = self.devices[fd].phys
+                            # print(event)
+                            #print("Nachricht :" + str(event))
+                            # if codeTag1 = event.code
+                            self.writeToDictionary(
+                                fd, readValue, self.readCombination)
+                            # returns true if both data structures have equal values
+                            result = self.checkIfOkay(
+                                self, self.idealCombination, self.readCombination)
+                            if result:
+                                # Solution is found - Game over :)
+                                print("Steckdose an!!")
+                                break
+        
+    
+  
+
+    
+
 
     # follow other steps:
     # https://mathematica.stackexchange.com/questions/4643/how-to-use-mathematica-functions-in-python-programs
