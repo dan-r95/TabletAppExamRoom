@@ -63,7 +63,7 @@ class GameManager:
         # print(devices.values())
 
         # the codes to unlock for each reader
-        assert len(solution) == len(devices)
+        assert len(solution) == len(devices),  "length must be equal of solution provided and number of devices" 
 
         keys = list(devices.keys())   # to have an index we can read from
         reader = [None] * len(devices)   # fill the reader object
@@ -74,11 +74,9 @@ class GameManager:
 
         idealCombination = {
             "key": keys,
-            "reader": reader,
+            "deviceName": reader,
             "value": solution  # passed solution dict
         }
-
-        print(idealCombination)
 
         return idealCombination
 
@@ -104,18 +102,18 @@ class GameManager:
 
         readCombination = {
             "key": keys,
-            "reader": reader,
+            "deviceName": reader,
             "value": readValues
         }
-
-        print(readCombination)
 
         return readCombination
 
     @staticmethod
     # return true if both objects have the same values
     def checkIfOkay(self, ideal, read):
+        print("ideal: ")
         print(ideal)
+        print("read: ")
         print(read)
         for key, _ in self.idealCombination.items():
             if self.idealCombination[key] != self.readCombination[key]:
@@ -123,32 +121,39 @@ class GameManager:
         return True
 
     @staticmethod
-    def writeToDictionary(self, deviceName, val, dictionary):
-        dictionary[deviceName] = val
+    def writeToDictionary(key, value, readCombination):
+        # get key where reader name is deviceName by iterating through the device and finding the index
+        j = 0
+        for i in readCombination["key"]:
+            if i == key:
+                readCombination["value"][j] = value
+                break
+            else:
+                j += 1
 
-    @staticmethod
+    @classmethod
     def beginReading(self):
         # adapted from
         # http://domoticx.com/nfc-rfid-hardware-usb-stick-syc-idic-usb-reader/
-        for dev in self.devices.values():
+        for _ in self.devices.values():
             while True:
                 r, _, _ = select(self.devices, [], [])
                 for fd in r:
-                    for event in self.devices[fd].read():  # fd needed?
+                    for event in self.devices[fd].read():
                         readValue = str(input())  # raw_input
                         # enter into an endless read-loop
-                        # if(event.code == 28):
+                        print(fd)
                         devicePhysName = self.devices[fd].phys
-                        print(event)
-                        print("Nachricht :" + str(event))
+                        # print(event)
+                        #print("Nachricht :" + str(event))
                         # if codeTag1 = event.code
                         self.writeToDictionary(
-                            devicePhysName, readValue, self.readCombination)
+                            fd, readValue, self.readCombination)
                         # returns true if both data structures have equal values
                         result = self.checkIfOkay(
                             self, self.idealCombination, self.readCombination)
                         if result:
-                            # SOlution is found - Game over :)
+                            # Solution is found - Game over :)
                             print("Steckdose an!!")
                             break
 
@@ -166,8 +171,8 @@ class GameManager:
 # UPDATE the SOLUTION we need!
 g = GameManager()
 # fill our solution here
-# solution = ["0010210257", "0000405226"]
-solution = ["0010210257"]
+solution = ["0010210257", "0000405226"]
+# solution = ["0010210257"]
 g.getDevices(solution)
 # g.getWolframOutput('Integrate[Log[x],x]')
-g.beginReading(g)
+g.beginReading()
