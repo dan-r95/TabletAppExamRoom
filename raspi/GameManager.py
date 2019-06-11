@@ -116,9 +116,11 @@ class GameManager:
     # return true if both objects have the same values
     def checkIfOkay(self, ideal, read):
         print("ideal: ")
-        print(ideal)
+        print(ideal["key"])
+        print(ideal["value"])
         print("read: ")
-        print(read)
+        print(read["key"])
+        print(read["value"])
         for key, _ in self.idealCombination.items():
             if self.idealCombination[key] != self.readCombination[key]:
                 return False
@@ -135,6 +137,27 @@ class GameManager:
                 break
             else:
                 j += 1
+                
+    @classmethod
+    def checkIfDuplicateAndIfDelete(self, tag):
+        print("§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§")
+        print(tag)
+        print(self.readCombination)
+        print("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv")
+        print(self.readCombination["value"])
+        if tag in self.readCombination["value"]:
+            j = 0
+            for _ in self.readCombination["deviceName"]:
+                print("for schleife")
+                if self.readCombination["value"][j] == tag:
+                    self.readCombination["value"][j] = None
+                    print(self.readCombination["value"][j])
+                    break
+                else:
+                    j += 1
+                    print("j plus 1")
+        else: print("not in")
+                    
 
     @classmethod
     def beginReading(self):
@@ -152,7 +175,7 @@ class GameManager:
                         # create and dump the tag
                         tag = "".join(i.strip('KEY_') for i in container)
                         devicePhysName = device.path
-
+                        self.checkIfDuplicateAndIfDelete(tag)
                         self.writeToDictionary(
                             devicePhysName, tag, self.readCombination)
                         # returns true if both data structures have equal
@@ -191,7 +214,7 @@ class GameManager:
 #
 g = GameManager()
 # fill our solution here
-solution = ["0010210257", "0000405226"]
+solution = ["0000405226", "0010247315", "0010210257", "0010086746", "0010203880", "0010181421", "0010217966"]
 #solution = ["0010210257"]
 g.getDevices(solution)
 g.beginReading()
