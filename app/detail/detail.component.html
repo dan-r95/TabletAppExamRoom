@@ -3,4 +3,6 @@
 	<Label class="h1 m-b-10" [text]="selected.name"></Label>
 	<Image height="30" [src]="selected.src" class="thumb img-circle"></Image>
 	<Label class="body" textWrap="true" [text]="selected.description"></Label>
+	<HtmlView html="{{ selected.description }}"></HtmlView>
+
 </StackLayout>

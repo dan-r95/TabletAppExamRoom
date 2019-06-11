@@ -22,7 +22,8 @@ export class LoginComponent implements OnInit {
 
 	login(): void {
 		//this.userService.login(this.user).subscribe(() => 
-		this.router.navigate(["/home"])
+		// if(this.user) matches array ... param = id 
+		this.router.navigate(["/home" , { id: this.user}]);
 		//, (error)=> {})
 	}
 }
