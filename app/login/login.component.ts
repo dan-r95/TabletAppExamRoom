@@ -3,7 +3,6 @@ import { UserService } from "../user.service"
 import { User } from "../user";
 import { Router } from "@angular/router";
 import { alert, prompt } from "tns-core-modules/ui/dialogs";
-import { Page } from "tns-core-modules/ui/page";
 
 @Component({
 	selector: "Login",
@@ -20,6 +19,7 @@ export class LoginComponent implements OnInit {
 	userPasswords: string[] = ['1234', '5678', '0000', '1111']
 	constructor(private userService: UserService, private router: Router) {
 		this.user = new User()
+		this.user.password= "0000"
 	}
 
 	ngOnInit(): void {

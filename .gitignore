@@ -52,4 +52,6 @@ tsconfig.tns.json
 /hooks
 
 *.js
-app/App_Resources/
+
+#python
+*.pyc

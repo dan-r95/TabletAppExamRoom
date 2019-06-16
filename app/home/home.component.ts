@@ -1,14 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { Router, NavigationExtras, ActivatedRoute } from "@angular/router";
-import { DeviceType } from "ui/enums";
-import { HtmlView } from "tns-core-modules/ui/html-view";
-import { device } from "platform";
-import { switchMap } from 'rxjs/operators';
-import { Observable } from "tns-core-modules/data/observable";
-import * as dialogs from "tns-core-modules/ui/dialogs";
+import { DeviceType } from "tns-core-modules/ui/enums";
+import { device } from "tns-core-modules/platform";
 import { WebView, LoadEventData } from "tns-core-modules/ui/web-view";
 import { Page } from "tns-core-modules/ui/page";
-import { TextField } from "tns-core-modules/ui/text-field";
 import { isIOS, isAndroid } from "tns-core-modules/platform"
 
 @Component({
@@ -103,7 +98,7 @@ export class HomeComponent implements OnInit {
 			name: "Hinweis",
 			src: "",
 			description: `<html><style type="text/css">
-			.tg  {border-collapse:collapse;border-spacing:0;}
+			.tg  {border-collapse:collapse;border-spacing:0; style="font-size: 18px";}
 			.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
 			.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
 			.tg .tg-0lax{text-align:left;vertical-align:top}
@@ -153,7 +148,7 @@ export class HomeComponent implements OnInit {
 			name: "Hinweis",
 			src: "",
 			description: `<html><style type="text/css">
-			.tg  {border-collapse:collapse;border-spacing:0;}
+			.tg  {border-collapse:collapse;border-spacing:0; style="font-size: 18px";}
 			.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
 			.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
 			.tg .tg-0lax{text-align:left;vertical-align:top}
@@ -182,7 +177,7 @@ export class HomeComponent implements OnInit {
 			name: "Hinweis",
 			src: "",
 			description: `<html><style type="text/css">
-			.tg  {border-collapse:collapse;border-spacing:0;}
+			.tg  {border-collapse:collapse;border-spacing:0; style="font-size: 18px";}
 			.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
 			.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
 			.tg .tg-0lax{text-align:left;vertical-align:top}
@@ -237,7 +232,7 @@ export class HomeComponent implements OnInit {
 			name: "Klausurtermine",
 			src: "",
 			description: `<html><style type="text/css">
-			.tg  {border-collapse:collapse;border-spacing:0;}
+			.tg  {border-collapse:collapse;border-spacing:0; style="font-size: 18px";}
 			.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
 			.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
 			.tg .tg-0lax{text-align:left;vertical-align:top}
