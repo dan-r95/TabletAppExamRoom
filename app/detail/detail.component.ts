@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
+import { WebView } from "tns-core-modules/ui/web-view";
 
 @Component({
     selector: "Home",
@@ -15,5 +16,8 @@ export class DetailComponent implements OnInit {
         });
     }
 
-    ngOnInit(): void {}
+	ngOnInit(): void {
+		console.log("detail")
+		console.log(this.selected)
+	}
 }
