@@ -28,6 +28,7 @@
         "nativescript-angular": "^8.0.0",
         "nativescript-background-http": "3.4.0",
         "nativescript-camera": "4.4.0",
+        "nativescript-feedback": "^1.3.9",
         "nativescript-geolocation": "5.0.0",
         "nativescript-image": "^2.1.4",
         "nativescript-imagepicker": "6.1.2",

@@ -33,8 +33,8 @@ export class HomeComponent implements OnInit {
 
 	select(args) {
 		switch (this.selectedUser) {
-			case '1234': this.selected = this.data_user4[args.index];
-				this.data = this.data_user4;
+			case '1234': this.selected = this.data_user1[args.index];
+				this.data = this.data_user1;
 			case '5678': this.selected = this.data_user2[args.index];
 				this.data = this.data_user2;
 			case '0000': this.selected = this.data_user3[args.index];
@@ -68,7 +68,6 @@ export class HomeComponent implements OnInit {
 				case '1111':
 					this.data = this.data_user4;
 			}
-			console.log(this.data)
 		});
 
 
@@ -192,8 +191,8 @@ export class HomeComponent implements OnInit {
 				<td class="tg-0lax">11.3.2020</td>
 			</tr>
 			<tr>
-				<td class="tg-0lax">Grundlagen der Informatik 1 WdH</td>
-				<td class="tg-0lax">11.3.2002</td>
+				<td class="tg-0lax">Computeranimation WdH</td>
+				<td class="tg-0lax">11.3.1999</td>
 			</tr>
 			</table></html>  `
 		});
@@ -252,7 +251,11 @@ export class HomeComponent implements OnInit {
 			</tr>
 			</table></html>  `
 		});
-
+		this.data_user4.push({
+			name: "Webseite",
+			src: "",
+			description: 'https://www.htw-dresden.de'
+		});	
 	}
 
 }

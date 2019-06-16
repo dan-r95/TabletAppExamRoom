@@ -1,11 +1,14 @@
-<ActionBar title="Bitte einloggen" class="action-bar">
-</ActionBar>
+<!--<ActionBar title="Bitte einloggen" class="action-bar">
+</ActionBar> -->
 
-<ScrollView class="page">
-    <StackLayout class="home-panel">
-	 <TextField  [(model)]="user.email" hint="mail" secure="false"></TextField>
-        <TextField  [(model)]="user.password" hint="Password" secure="true"></TextField>
-        <Button text="Sign in" (tap)="login()"></Button>
-		 <Span text="bold, " fontWeight="Bold">{{user.password}}</Span>
-    </StackLayout>
-</ScrollView>
+<Page actionBarHidden="true" loaded="onPageLoaded">
+
+	<ScrollView class="page">
+		<StackLayout class="home-panel">
+			<Image src="res://ic_launcher" stretch="aspectFit" class="img" ></Image> 
+			<TextField  [(ngModel)]="user.password" #password hint="Password" secure="true" (returnPress)="tryLogin($event)"></TextField>
+			<Button text="Sign in" (tap)="tryLogin()"></Button>
+		</StackLayout>
+	</ScrollView>
+
+</Page>

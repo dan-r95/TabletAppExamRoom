@@ -1,8 +1,9 @@
-import { Component, OnInit, ElementRef, ViewChild } from "@angular/core";
+import { Component, ViewChild, ElementRef} from "@angular/core";
 import { UserService } from "../user.service"
 import { User } from "../user";
 import { Router } from "@angular/router";
-import { alert, prompt } from "tns-core-modules/ui/dialogs";
+import { Feedback, FeedbackType, FeedbackPosition } from "nativescript-feedback";
+import { TextField } from "tns-core-modules/ui/text-field";
 
 @Component({
 	selector: "Login",
@@ -10,32 +11,50 @@ import { alert, prompt } from "tns-core-modules/ui/dialogs";
 	templateUrl: "./login.component.html",
 	styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
+	private feedback: Feedback;
 
-	@ViewChild("password") password: ElementRef;
-	@ViewChild("confirmPassword") confirmPassword: ElementRef;
+	@ViewChild('password') input; 
 
+	// define here the possible login codes 
 	user: User
-	userPasswords: string[] = ['1234', '5678', '0000', '1111']
+	correctUserPasswords: string[] = ['1234', '5678', '0000', '1111']
+	failedLoginAttemps: number = 0
+
 	constructor(private userService: UserService, private router: Router) {
-		this.user = new User()
-		this.user.password= "0000"
+		this.user = new User();
+		this.feedback = new Feedback();
 	}
 
-	ngOnInit(): void {
+	tryLogin(args): void {
+		//let textField = <TextField>args.object;
+		console.log(this.failedLoginAttemps)
+		if (this.failedLoginAttemps >= 3) {
+			this.feedback.warning({
+				message: "Zu viele Versuche, warte 20s!..."
+			});
+			//textField.editable = false;
+			setTimeout(() => {
+				//textField.editable = true;
+				this.login()
+			},
+				20000);
+		}
+		else { this.login() }
 	}
 
 	login(): void {
-		console.log(this.user)
 		if (!this.user.password) {
-			alert({ message: "Please provide an password." });
+			this.feedback.warning({ message: "Bitte Passwort angeben" });
 			return;
 		}
-		console.log(this.user)
-		console.log(this.user.password)
-		console.log(this.userPasswords.indexOf(this.user.password))
-		if (this.userPasswords.indexOf(this.user.password) > -1) {
+		if (this.correctUserPasswords.indexOf(this.user.password) > -1) {
 			this.router.navigate(["/home", { id: this.user.password }]);
+		} else {
+			this.feedback.warning({ message: "Falsches Passwort" });
+			this.user.password = ''
+			this.failedLoginAttemps++
 		}
 	}
+
 }
