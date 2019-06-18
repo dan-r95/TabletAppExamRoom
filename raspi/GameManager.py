@@ -6,6 +6,8 @@ import glob
 from os import listdir
 from os.path import isfile, join
 import asyncio
+import subprocess
+from subprocess import PIPE, Popen
 
 
 class GameManager:
@@ -186,6 +188,7 @@ class GameManager:
                             # Solution is found - Game over :)
                             print("Steckdose an!!")
                             print("Now lets trigger the power!")
+                            self.callPower("00011", "1")
                             break
                         container = []
                     else:
@@ -207,14 +210,24 @@ class GameManager:
         command = '/usr/local/bin/runMath'
         parameter = expression
         call([command, parameter])
+        
+    @classmethod    
+    def callPower(cls, code, toggle):
+        #spawn darknet process
+        proc = subprocess.Popen(["/home/pi/raspberry-remote/send",
+                   code,
+                   "4",
+                   toggle,], stdin = PIPE, stdout = PIPE)
 
 
 # UPDATE the SOLUTION we need!
 #
 #
 g = GameManager()
+g.callPower("00011", "0")
 # fill our solution here
-solution = ["0000405226", "0010247315", "0010210257", "0010086746", "0010203880", "0010181421", "0010217966"]
-#solution = ["0010210257"]
+#solution = ["0000405226", "0010247315", "0010210257", "0010086746", "0010203880", "0010181421", "0010217966"]
+solution = ["0010181421"]
 g.getDevices(solution)
 g.beginReading()
+
