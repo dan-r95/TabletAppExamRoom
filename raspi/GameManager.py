@@ -8,6 +8,7 @@ from os.path import isfile, join
 import asyncio
 import subprocess
 from subprocess import PIPE, Popen
+import time
 
 
 class GameManager:
@@ -23,24 +24,36 @@ class GameManager:
 
     # Fill devices
     @classmethod
-    def getDevices(self, solution):
+    def getDevices(self, solution, devices):
         # register all found devices
         devices = glob.glob("/dev/input/by-path/*")
+        print(devices)
         self.devicesMatching = []
 
         # find devices we need (keyboard rfid reader) from /dev/input
         for device in devices:
             if 'usb' in device and 'event-kbd' in device:
-                self.devicesMatching.append(device)
-
+                end = device.split('usb-usb-', 1)[1]
+                print(end)
+                self.devicesMatching.append(end)
+                
+                
+        """"
+        print("devices matching")
+        print(self.devicesMatching)
+        self.devicesMatching = self.devicesMatching.sort()
+        print(self.devicesMatching)
+        """
         # add devices here
         # TODO: handle expection when none are found
-        self.devices = map(InputDevice, self.devicesMatching)
-        self.devicesMap = map(InputDevice, self.devicesMatching)
+        self.devices = map(InputDevice, devices)
+        self.devicesMap = map(InputDevice, devices)
         # for i in self.devices:
         #    i.grab()
+        print(list(self.devicesMap))
 
         self.devices = {dev.fd: dev for dev in self.devices}
+        
 
         # ATTENTION the index does not start at zero here! - passed key to the list object
         # for i in self.devices:
@@ -118,10 +131,10 @@ class GameManager:
     # return true if both objects have the same values
     def checkIfOkay(self, ideal, read):
         print("ideal: ")
-        print(ideal["key"])
+        print(ideal["deviceName"])
         print(ideal["value"])
         print("read: ")
-        print(read["key"])
+        print(read["deviceName"])
         print(read["value"])
         for key, _ in self.idealCombination.items():
             if self.idealCombination[key] != self.readCombination[key]:
@@ -142,23 +155,14 @@ class GameManager:
                 
     @classmethod
     def checkIfDuplicateAndIfDelete(self, tag):
-        print("§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§")
-        print(tag)
-        print(self.readCombination)
-        print("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv")
-        print(self.readCombination["value"])
         if tag in self.readCombination["value"]:
             j = 0
             for _ in self.readCombination["deviceName"]:
-                print("for schleife")
                 if self.readCombination["value"][j] == tag:
                     self.readCombination["value"][j] = None
-                    print(self.readCombination["value"][j])
                     break
                 else:
                     j += 1
-                    print("j plus 1")
-        else: print("not in")
                     
 
     @classmethod
@@ -189,6 +193,9 @@ class GameManager:
                             print("Steckdose an!!")
                             print("Now lets trigger the power!")
                             self.callPower("00011", "1")
+                            #power of coffee machine after some seconds and brewing is over
+                            time.sleep(5)
+                            self.callPower("00011", "0")
                             break
                         container = []
                     else:
@@ -213,7 +220,6 @@ class GameManager:
         
     @classmethod    
     def callPower(cls, code, toggle):
-        #spawn darknet process
         proc = subprocess.Popen(["/home/pi/raspberry-remote/send",
                    code,
                    "4",
@@ -226,8 +232,12 @@ class GameManager:
 g = GameManager()
 g.callPower("00011", "0")
 # fill our solution here
-#solution = ["0000405226", "0010247315", "0010210257", "0010086746", "0010203880", "0010181421", "0010217966"]
-solution = ["0010181421"]
-g.getDevices(solution)
+solution = ["0000405226", "0010247315", "0010210257", "0010086746", "0010203880", "0010181421", "0010217966"]
+devices = ['/dev/input/by-path/platform-3f980000.usb-usb-0:1.3:1.0-event-kbd', '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.3:1.0-event-kbd',
+ '/dev/input/by-path/platform-3f980000.usb-usb-0:1.2:1.0-event-kbd', '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.4:1.0-event-kbd',
+  '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.2:1.0-event-kbd', '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.1:1.0-event-kbd',
+   '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.3:1.0-event-kbd']
+#solution = ["0010181421", "bar"]
+g.getDevices(solution, devices)
 g.beginReading()
 
