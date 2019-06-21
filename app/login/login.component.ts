@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef} from "@angular/core";
+import { Component, ViewChild, ElementRef } from "@angular/core";
 import { UserService } from "../user.service"
 import { User } from "../user";
 import { Router } from "@angular/router";
@@ -10,11 +10,12 @@ import { TextField } from "tns-core-modules/ui/text-field";
 	moduleId: module.id,
 	templateUrl: "./login.component.html",
 	styleUrls: ['./login.component.css']
+
 })
 export class LoginComponent {
 	private feedback: Feedback;
 
-	@ViewChild('password') input; 
+	@ViewChild('password') input;
 
 	// define here the possible login codes 
 	user: User
@@ -42,6 +43,7 @@ export class LoginComponent {
 		}
 		else { this.login() }
 	}
+
 
 	login(): void {
 		if (!this.user.password) {
