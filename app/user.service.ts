@@ -1,30 +1,55 @@
 import { Injectable } from "@angular/core";
-import { Http, Headers, Response} from "@angular/http";
-import { HttpResponse } from '@angular/common/http';
-import { Observable, throwError, of} from "rxjs";
+import { Http, Headers, Response } from "@angular/http";
+import { HttpResponse, HttpHeaders, HttpErrorResponse, HttpClient } from '@angular/common/http';
+import { Observable, throwError, of } from "rxjs";
 import { catchError, map, tap } from "rxjs/operators";
 
 import { User } from "./user";
-//import { Config } from "../config";
-import { LoginModule } from './login/login.module';
 
-
-
-@Injectable( {
-    providedIn: 'root',
+@Injectable({
+	providedIn: 'root',
 })
 export class UserService {
-    constructor(private http: Http) { }
 
-    login(user: User): Observable<{}> {
-        alert("login")
-        // if (!user.email || !user.password) {
-        //     return throwError("Please provide both an email address and password.");
-        // }
-        if (user.email == "1") {
-            return of(new HttpResponse({ status: 200 }));
-        }
-    }
+	serverAdress: string;
+
+
+	constructor(private http: Http, private client: HttpClient) { }
+
+	login(user: User): Observable<{}> {
+		alert("login")
+		// if (!user.email || !user.password) {
+		//     return throwError("Please provide both an email address and password.");
+		// }
+		if (user.email == "1") {
+			return of(new HttpResponse({ status: 200 }));
+		}
+	}
+
+	setServerAdress(address): void {
+		if (this.serverAdress) {
+			this.serverAdress = address;
+		}
+
+	}
+
+
+	private handleError(error: HttpErrorResponse) {
+		if (error.error instanceof ErrorEvent) {
+			// A client-side or network error occurred. Handle it accordingly.
+			console.error('An error occurred:', error.error.message);
+		} else {
+			// The backend returned an unsuccessful response code.
+			// The response body may contain clues as to what went wrong,
+			console.error(
+				`Backend returned code ${error.status}, ` +
+				`body was: ${error.error}`);
+		}
+		// return an observable with a user-facing error message
+		return throwError(
+			'Something bad happened; please try again later.');
+	};
+
     /*
             return this.http.post(
                 Config.apiUrl + "user/" + Config.appKey,
@@ -38,16 +63,24 @@ export class UserService {
                 catchError(this.handleErrors)
             );
         }
-    
-        getCommonHeaders() {
-            let headers = new Headers();
-            headers.append("Content-Type", "application/json");
-            headers.append("Authorization", Config.authHeader);
-            return headers;
-        }
     */
-    handleErrors(error: Response) {
-        console.log(JSON.stringify(error.json()));
-        return Observable.throw(error);
-    }
+
+	public sendSolution(solution: any): Observable<any> {
+
+		const httpOptions = {
+			headers: new HttpHeaders({
+				'Content-Type': 'application/json',
+				'Authorization': 'my-auth-token'
+			})
+		};
+
+		return this.client.post(this.serverAdress, JSON.stringify(solution), httpOptions).pipe(
+			catchError(this.handleError)
+		);
+	}
+
+	handleErrors(error: Response) {
+		console.log(JSON.stringify(error.json()));
+		return Observable.throw(error);
+	}
 }
