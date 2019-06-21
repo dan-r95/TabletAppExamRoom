@@ -295,8 +295,10 @@ export const data_user_hard_2 = [{
 	src: "",
 	description: 'https://www.htw-dresden.de'
 }];
-
-export const solution1 = { param1: 'A', param2: '', param3: '', param4: '', param5: '', param6: '', param7: '' };
-export const solution2 = { param1: 'A', param2: '', param3: '', param4: '', param5: '', param6: '', param7: '' };
-export const solution3 = { param1: 'A', param2: '', param3: '', param4: '', param5: '', param6: '', param7: '' };
-export const solution4 = { param1: 'A', param2: '', param3: '', param4: '', param5: '', param6: '', param7: '' };
+//K Kaffee E Espresso L Latte Macchiato W Wasser
+export const solution_simple_1 = { param1: 'K', param2: '&&', param3: '(', param4: 'E', param5: '||', param6: 'L', param7: ')' };
+export const solution_simple_2 = { param1: '(', param2: 'K', param3: '||', param4: 'E', param5: ')', param6: '&&', param7: 'L' };
+export const solution_middle_1 = { param1: '~', param2: 'K', param3: '||', param4: '~', param5: 'E', param6: '||', param7: 'C' };
+export const solution_middle_2 = { param1: '(', param2: 'L', param3: '||', param4: 'E', param5: ')', param6: '&&', param7: 'K' };
+export const solution_hard_1 = { param1: '~', param2: 'K', param3: '||', param4: '~', param5: 'E', param6: '||', param7: 'C' };
+export const solution_hard_2 = { param1: '~', param2: 'K', param3: '&&', param4: '~', param5: 'E', param6: '&&', param7: 'W' };
