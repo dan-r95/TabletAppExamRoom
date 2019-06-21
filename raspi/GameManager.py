@@ -7,7 +7,7 @@ from os import listdir
 from os.path import isfile, join
 import asyncio
 import subprocess
-from subprocess import PIPE, Popen
+from subprocess import PIPE, Popen, call
 import time
 
 
@@ -212,11 +212,12 @@ class GameManager:
     # https://mathematica.stackexchange.com/questions/4643/how-to-use-mathematica-functions-in-python-programs
     # hacky way to call wolfram alpha from python
     @classmethod
-    def getWolframOutput(cls, expression):
-        #!/usr/bin/python
-        command = '/usr/local/bin/runMath'
-        parameter = expression
-        call([command, parameter])
+    def getWolframOutput(cls, element1,element2,element3,element4,element5,element6,element7, solution):
+        command='/usr/local/bin/callWolframAlpha.sh'
+        #parameter=expression
+        parameter = 'Equivalent['+element1+element2+element3+element4+element5+element6+element7+','+solution+']//TautologyQ'
+        call([command,parameter])
+
         
     @classmethod    
     def callPower(cls, code, toggle):
@@ -230,7 +231,7 @@ class GameManager:
 #
 #
 g = GameManager()
-g.callPower("00011", "0")
+#g.callPower("00011", "0")
 # fill our solution here
 solution = ["0000405226", "0010247315", "0010210257", "0010086746", "0010203880", "0010181421", "0010217966"]
 devices = ['/dev/input/by-path/platform-3f980000.usb-usb-0:1.3:1.0-event-kbd', '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.3:1.0-event-kbd',
@@ -238,6 +239,6 @@ devices = ['/dev/input/by-path/platform-3f980000.usb-usb-0:1.3:1.0-event-kbd', '
   '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.2:1.0-event-kbd', '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.1:1.0-event-kbd',
    '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.3:1.0-event-kbd']
 #solution = ["0010181421", "bar"]
-g.getDevices(solution, devices)
-g.beginReading()
-
+#g.getDevices(solution, devices)
+#g.beginReading()
+g.getWolframOutput('a','&&','(','b','||','c',')','a&&b||a&&c')
