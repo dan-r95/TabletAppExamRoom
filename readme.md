@@ -5,7 +5,7 @@ It is assumed that you have installed and configured NativeScript properly. If n
 To start the emulator with this repository:
   > `tns preview`  OR
   > `tns run android` or `tns run ios`
-  > `tns build-android --bundle` to build APK
+  > `tns build android --bundle` to build APK
   > `tns run android --device Nexus_7_API_27` when using an emulator.
   
 ### Development

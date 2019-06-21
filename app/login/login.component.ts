@@ -19,7 +19,7 @@ export class LoginComponent {
 
 	// define here the possible login codes 
 	user: User
-	correctUserPasswords: string[] = ['1234', '5678', '0000', '1111']
+	correctUserPasswords: string[] = ['1234', '5678', '0000', '1111', '2222', '3333']
 	failedLoginAttemps: number = 0
 
 	constructor(private userService: UserService, private router: Router) {

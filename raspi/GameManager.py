@@ -1,12 +1,16 @@
 # See: https://python-evdev.readthedocs.io/en/latest/tutorial.html
-import evdev
+import json
+from _thread import *
+import sys
+import socket
+from io import BytesIO
+from http.server import HTTPServer, BaseHTTPRequestHandler
 from select import select
-from evdev import InputDevice, categorize, ecodes
+#from evdev import InputDevice, categorize, ecodes
 import glob
 from os import listdir
 from os.path import isfile, join
 import asyncio
-import subprocess
 from subprocess import PIPE, Popen, call
 import time
 
@@ -36,8 +40,7 @@ class GameManager:
                 end = device.split('usb-usb-', 1)[1]
                 print(end)
                 self.devicesMatching.append(end)
-                
-                
+
         """"
         print("devices matching")
         print(self.devicesMatching)
@@ -53,7 +56,6 @@ class GameManager:
         print(list(self.devicesMap))
 
         self.devices = {dev.fd: dev for dev in self.devices}
-        
 
         # ATTENTION the index does not start at zero here! - passed key to the list object
         # for i in self.devices:
@@ -152,7 +154,7 @@ class GameManager:
                 break
             else:
                 j += 1
-                
+
     @classmethod
     def checkIfDuplicateAndIfDelete(self, tag):
         if tag in self.readCombination["value"]:
@@ -163,7 +165,6 @@ class GameManager:
                     break
                 else:
                     j += 1
-                    
 
     @classmethod
     def beginReading(self):
@@ -193,7 +194,7 @@ class GameManager:
                             print("Steckdose an!!")
                             print("Now lets trigger the power!")
                             self.callPower("00011", "1")
-                            #power of coffee machine after some seconds and brewing is over
+                            # power of coffee machine after some seconds and brewing is over
                             time.sleep(5)
                             self.callPower("00011", "0")
                             break
@@ -212,33 +213,68 @@ class GameManager:
     # https://mathematica.stackexchange.com/questions/4643/how-to-use-mathematica-functions-in-python-programs
     # hacky way to call wolfram alpha from python
     @classmethod
-    def getWolframOutput(cls, element1,element2,element3,element4,element5,element6,element7, solution):
-        command='/usr/local/bin/callWolframAlpha.sh'
-        #parameter=expression
-        parameter = 'Equivalent['+element1+element2+element3+element4+element5+element6+element7+','+solution+']//TautologyQ'
-        call([command,parameter])
+    def getWolframOutput(cls, element1, element2, element3, element4, element5, element6, element7, solution):
+        command = '/usr/local/bin/callWolframAlpha.sh'
+        # parameter=expression
+        parameter = 'Equivalent['+element1+element2+element3+element4 + \
+            element5+element6+element7+','+solution+']//TautologyQ'
+        call([command, parameter])
 
-        
-    @classmethod    
+    @classmethod
     def callPower(cls, code, toggle):
         proc = subprocess.Popen(["/home/pi/raspberry-remote/send",
-                   code,
-                   "4",
-                   toggle,], stdin = PIPE, stdout = PIPE)
+                                 code,
+                                 "4",
+                                 toggle, ], stdin=PIPE, stdout=PIPE)
 
 
-# UPDATE the SOLUTION we need!
-#
-#
-g = GameManager()
-#g.callPower("00011", "0")
-# fill our solution here
-solution = ["0000405226", "0010247315", "0010210257", "0010086746", "0010203880", "0010181421", "0010217966"]
-devices = ['/dev/input/by-path/platform-3f980000.usb-usb-0:1.3:1.0-event-kbd', '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.3:1.0-event-kbd',
- '/dev/input/by-path/platform-3f980000.usb-usb-0:1.2:1.0-event-kbd', '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.4:1.0-event-kbd',
-  '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.2:1.0-event-kbd', '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.1:1.0-event-kbd',
-   '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.3:1.0-event-kbd']
-#solution = ["0010181421", "bar"]
-#g.getDevices(solution, devices)
-#g.beginReading()
-g.getWolframOutput('a','&&','(','b','||','c',')','a&&b||a&&c')
+'''
+	Simple socket server using threads
+'''
+
+
+class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
+
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b'Hello, world!')
+
+    def do_POST(self):
+        content_length = int(self.headers['Content-Length'])
+        body = self.rfile.read(content_length)
+        self.handleJson(body)
+        self.send_response(200)
+        self.end_headers()
+        response = BytesIO()
+        self.wfile.write(response.getvalue())
+
+    def handleJson(self, body):
+		### MAIN LOOP
+        l = json.loads(body)
+        assert len(l) == 7, 'json body should have 7 parameters'
+        print(l.values())
+        # UPDATE the SOLUTION we need!
+        g = GameManager()
+        g.callPower("00011", "0")
+        # fill our solution here
+        solution = ["0000405226", "0010247315", "0010210257",
+                    "0010086746", "0010203880", "0010181421", "0010217966"]
+        devices = ['/dev/input/by-path/platform-3f980000.usb-usb-0:1.3:1.0-event-kbd', '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.3:1.0-event-kbd',
+                   '/dev/input/by-path/platform-3f980000.usb-usb-0:1.2:1.0-event-kbd', '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.4:1.0-event-kbd',
+                   '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.2:1.0-event-kbd', '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.1:1.0-event-kbd',
+                   '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.3:1.0-event-kbd']
+        #solution = ["0010181421", "bar"]
+        #g.getDevices(solution, devices)
+        # g.beginReading()
+        actualSolution = 'a&&b||a&&c'
+        g.getWolframOutput(l["param1"], l["param2"], l["param3"], l["param4"],
+                           l["param5"], l["param6"], l["param7"], actualSolution)
+
+
+HOST = '192.168.178.20'  # Symbolic name, meaning all available interfaces
+PORT = 8888  # Arbitrary non-privileged port
+# Run the whole program
+httpd = HTTPServer((HOST, PORT), SimpleHTTPRequestHandler)
+print("listening...")
+httpd.serve_forever()

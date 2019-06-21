@@ -70,10 +70,9 @@ export class UserService {
 		const httpOptions = {
 			headers: new HttpHeaders({
 				'Content-Type': 'application/json',
-				'Authorization': 'my-auth-token'
 			})
 		};
-
+		console.log(JSON.stringify(solution))
 		return this.client.post(this.serverAdress, JSON.stringify(solution), httpOptions).pipe(
 			catchError(this.handleError)
 		);
