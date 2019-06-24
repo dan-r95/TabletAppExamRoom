@@ -13,6 +13,8 @@ export class UserService {
 
 	serverAdress: string;
 
+	user: User;
+
 
 	constructor(private http: Http, private client: HttpClient) { }
 
@@ -33,6 +35,13 @@ export class UserService {
 
 	}
 
+	public setUser(user: User) {
+		this.user = user;
+	}
+
+	public getUser(): User {
+		return this.user
+	}
 
 	private handleError(error: HttpErrorResponse) {
 		if (error.error instanceof ErrorEvent) {
@@ -72,7 +81,6 @@ export class UserService {
 				'Content-Type': 'application/json',
 			})
 		};
-		console.log(JSON.stringify(solution))
 		return this.client.post(this.serverAdress, JSON.stringify(solution), httpOptions).pipe(
 			catchError(this.handleError)
 		);

@@ -8,6 +8,9 @@ import { isIOS, isAndroid } from "tns-core-modules/platform"
 import { UserService } from "~/user.service";
 import * as data from '../data'
 import { catchError } from "rxjs/operators";
+import { RouterExtensions } from "nativescript-angular";
+import * as application from "tns-core-modules/application";
+import { AndroidApplication, AndroidActivityBackPressedEventData } from "tns-core-modules/application";
 
 @Component({
 	selector: "Home",
@@ -26,27 +29,26 @@ export class HomeComponent implements OnInit {
 	selectedUser: string;
 	private sub: any;
 
+	SERVERADRESS: string = '141.56.232.23:8888';
+
 	constructor(private route: ActivatedRoute, private router: Router, private userService: UserService) {
-		router.events.subscribe((val) => {
-			console.log(val)
-		});
 	}
 
 
 	select(args) {
 		switch (this.selectedUser) {
 			case '1234':
-				this.selected = data.data_user_simple_1[args.index];
+				this.selected = data.data_user_simple_1[args.index]; break;
 			case '5678':
-				this.selected = data.data_user_simple_2[args.index];
+				this.selected = data.data_user_simple_2[args.index]; break;
 			case '0000':
-				this.selected = data.data_user_middle_1[args.index];
+				this.selected = data.data_user_middle_1[args.index]; break;
 			case '1111':
-				this.selected = data.data_user_middle_2[args.index];
+				this.selected = data.data_user_middle_2[args.index]; break;
 			case '2222':
-				this.selected = data.data_user_hard_1[args.index];
+				this.selected = data.data_user_hard_1[args.index]; break;
 			case '3333':
-				this.selected = data.data_user_hard_2[args.index];
+				this.selected = data.data_user_hard_2[args.index]; break;
 		}
 
 
@@ -60,7 +62,15 @@ export class HomeComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		console.log('init component')
+
+		if (!isAndroid) {
+			return;
+		}
+		// dont go back via hardware buttons (android)
+		application.android.on(AndroidApplication.activityBackPressedEvent, (data: AndroidActivityBackPressedEventData) => {
+			data.cancel = true;
+		});
+
 		// set the solution and data to the logged in user
 		this.sub = this.route.params.subscribe(params => {
 			this.selectedUser = params['id']; // (+) converts string 'id' to a number
@@ -71,7 +81,7 @@ export class HomeComponent implements OnInit {
 
 
 	sendSolutionToServer(): boolean {
-		this.userService.setServerAdress('141.56.232.23:8888');
+		this.userService.setServerAdress(this.SERVERADRESS);
 		this.userService.sendSolution(this.solution);
 		return false;
 	}
@@ -80,56 +90,48 @@ export class HomeComponent implements OnInit {
 		switch (this.selectedUser) {
 			case '1234':
 				this.data = data.data_user_simple_1;
-				this.solution = data.solution_simple_1;
+				this.solution = data.solution_simple_1; break;
 			case '5678':
 				this.data = data.data_user_simple_2;
-				this.solution = data.solution_simple_2;
+				this.solution = data.solution_simple_2; break;
 			case '0000':
 				this.data = data.data_user_middle_1;
 				this.solution = data.solution_middle_1;
 			case '1111':
 				this.data = data.data_user_middle_2;
-				this.solution = data.solution_middle_2;
+				this.solution = data.solution_middle_2; break;
 			case '2222':
 				this.data = data.data_user_hard_1;
-				this.solution = data.solution_hard_1;
+				this.solution = data.solution_hard_1; break;
 			case '3333':
 				this.data = data.data_user_hard_2;
-				this.solution = data.solution_hard_2;
+				this.solution = data.solution_hard_2; break;
 		}
-
 	}
+	logout(): void {
+
+		this.data = [];
+		this.selected = {};
+		this.solution = {}
+		this.selectedUser = '';
+		this.router.navigate(['/login']);
+	}
+
+
 }
-
-
-
 
 // handling WebView load finish event
 export function onWebViewLoaded(webargs) {
+	console.log('webview loaded')
 	const page: Page = <Page>webargs.object.page;
 	const vm = page.bindingContext;
 	const webview: WebView = <WebView>webargs.object;
-	webview.ensureDomNode()
-	vm.set("result", "WebView is still loading...");
-	vm.set("enabled", false);
-
-	webview.on(WebView.loadFinishedEvent, (args: LoadEventData) => {
-		let message = "";
-		if (!args.error) {
-			message = `WebView finished loading of ${args.url}`;
-		} else {
-			message = `Error loading ${args.url} : ${args.error}`;
-		}
-
-		vm.set("result", message);
-	});
 
 	if (isAndroid) {
+		webview.android.getSettings().setSupportZoom(false);
 		webview.android.getSettings().setDisplayZoomControls(false);
 		webview.android.getSettings().setBuiltInZoomControls(false);
 	}
-
-
 }
 
 

@@ -29,17 +29,18 @@ export class LoginComponent {
 
 	tryLogin(args): void {
 		//let textField = <TextField>args.object;
-		console.log(this.failedLoginAttemps)
+		//console.log(args)
 		if (this.failedLoginAttemps >= 3) {
 			this.feedback.warning({
 				message: "Zu viele Versuche, warte 20s!..."
 			});
-			//textField.editable = false;
+			//console.log(textField)
+			/*textField.editable = false;
 			setTimeout(() => {
 				//textField.editable = true;
 				this.login()
 			},
-				20000);
+				10000);*/
 		}
 		else { this.login() }
 	}
@@ -51,6 +52,7 @@ export class LoginComponent {
 			return;
 		}
 		if (this.correctUserPasswords.indexOf(this.user.password) > -1) {
+			this.userService.setUser(this.user)
 			this.router.navigate(["/home", { id: this.user.password }]);
 		} else {
 			this.feedback.warning({ message: "Falsches Passwort" });

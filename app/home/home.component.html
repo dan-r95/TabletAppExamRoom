@@ -1,5 +1,8 @@
-<ActionBar title="Notizen App"></ActionBar>
-
+<ActionBar title="Meine Notizen">
+		<ActionItem 
+			ios.systemIcon="16" ios.position="right" (tap)="logout()" 
+		    android.position="actionBar" android.systemIcon="ic_menu_close_clear_cancel"></ActionItem>
+</ActionBar>
 <!-- The [columns] bit here makes this app a two-column layout on tablets, and a one-column layout on phones -->
 <GridLayout [columns]="isTablet ? '*, 2*' : '*'">
 	<GridLayout col="0" class="left-column">
@@ -14,6 +17,8 @@
 				</GridLayout>
 			</ng-template>
 		</ListView>
+
+		<!--<Button text="Sign in" (tap)="sendSolutionToServer()"></Button>-->
 	</GridLayout>
 
 	<!-- The markup below is duplicated in detail/detail.component.html. You might want to abstract this bit
