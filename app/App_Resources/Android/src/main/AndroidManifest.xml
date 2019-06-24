@@ -8,9 +8,7 @@
 		android:smallScreens="true"
 		android:normalScreens="true"
 		android:largeScreens="true"
-		android:xlargeScreens="true"
-		android:xxlargeScreens="true"
-		android:xxxlargeScreens="true"/>
+		android:xlargeScreens="true" />
 
 	<uses-sdk
 		android:minSdkVersion="17"
