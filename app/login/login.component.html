@@ -5,8 +5,8 @@
 	<ScrollView class="page">
 		<StackLayout class="home-panel">
 			<Image src="res://ic_launcher" stretch="aspectFit" class="img" ></Image> 
-			<TextField  [(ngModel)]="user.password" #password hint="Password" secure="true" (returnPress)="tryLogin($event)"></TextField>
-			<Button text="Sign in" (tap)="tryLogin()"></Button>
+			<TextField  [(ngModel)]="user.password" #password hint="****" secure="true"  [maxLength]="lengthVar" (returnPress)="login()"></TextField>
+			<Button text="Sign in" (tap)="login()"></Button>
 		</StackLayout>
 	</ScrollView>
 </Page>

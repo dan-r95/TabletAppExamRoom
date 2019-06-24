@@ -22,7 +22,6 @@ export class DetailComponent implements OnInit {
 	}
 
 	onNavBtnTap(): void {
-		console.log('hi')
 		this.router.navigate(["/home", { id: this.userService.getUser().password }]);
 	}
 }

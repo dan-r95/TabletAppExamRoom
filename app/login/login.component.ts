@@ -20,44 +20,46 @@ export class LoginComponent {
 	// define here the possible login codes 
 	user: User
 	correctUserPasswords: string[] = ['1234', '5678', '0000', '1111', '2222', '3333']
-	failedLoginAttemps: number = 0
+	failedLoginAttemps: number
+	lengthVar = "4";
 
 	constructor(private userService: UserService, private router: Router) {
 		this.user = new User();
 		this.feedback = new Feedback();
+		this.failedLoginAttemps = 0;
 	}
 
-	tryLogin(args): void {
-		//let textField = <TextField>args.object;
-		//console.log(args)
+	waitWhenLoginLimitReached(): void {
 		if (this.failedLoginAttemps >= 3) {
 			this.feedback.warning({
-				message: "Zu viele Versuche, warte 20s!..."
+				message: "Zu viele Versuche, warte 20s!...",
+				duration: 18000
 			});
-			//console.log(textField)
-			/*textField.editable = false;
+			this.user.password = ''
+			this.lengthVar = "0"
 			setTimeout(() => {
-				//textField.editable = true;
+				this.lengthVar = "4";
 				this.login()
 			},
-				10000);*/
+				10000);
 		}
-		else { this.login() }
 	}
 
 
 	login(): void {
 		if (!this.user.password) {
-			this.feedback.warning({ message: "Bitte Passwort angeben" });
+			this.feedback.warning({ message: "Bitte Passwort angeben", duration: 2000 });
 			return;
 		}
 		if (this.correctUserPasswords.indexOf(this.user.password) > -1) {
+			this.feedback.success({ message: "Korrekt! :)", duration: 1000 });
 			this.userService.setUser(this.user)
 			this.router.navigate(["/home", { id: this.user.password }]);
 		} else {
-			this.feedback.warning({ message: "Falsches Passwort" });
+			this.feedback.warning({ message: "Falsches Passwort", duration: 2000});
 			this.user.password = ''
 			this.failedLoginAttemps++
+			this.waitWhenLoginLimitReached()
 		}
 	}
 
