@@ -13,7 +13,7 @@ export class UserService {
 
 	serverAdress: string;
   user: User;
-  feedback: Feedback
+  private feedback: Feedback
 
 	constructor(private http: Http, private client: HttpClient) { 
     this.feedback = new Feedback();
@@ -52,15 +52,17 @@ export class UserService {
 			// The backend returned an unsuccessful response code.
 			// The response body may contain clues as to what went wrong,
     if(error.status){
-    this.feedback.warning({
+    /*this.feedback.warning({
       message: `Backend returned code ${error.status}, ` +
-        `body was: ${error.error}`, duration: 2000 });
+        `body was: ${error.error}`, duration: 2000 });*/
     } else {
-      this.feedback.warning({
+      /*this.feedback.warning({
         message: `Backend returned code ${error}`, duration: 2000
-      });
+      }); */
     }
-		//}
+    //}
+    
+    alert('Something bad happened; please try again later.')
 		// return an observable with a user-facing error message
 		return throwError(
 			'Something bad happened; please try again later.');
