@@ -5,7 +5,7 @@ import { device } from "tns-core-modules/platform";
 import { WebView, LoadEventData } from "tns-core-modules/ui/web-view";
 import { Page } from "tns-core-modules/ui/page";
 import { isIOS, isAndroid } from "tns-core-modules/platform"
-import { UserService } from "~/user.service";
+import { UserService } from "~/services/user.service";
 import * as data from '../data'
 import { catchError } from "rxjs/operators";
 import { RouterExtensions } from "nativescript-angular";

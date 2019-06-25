@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef } from "@angular/core";
-import { UserService } from "../user.service"
+import { UserService } from "../services/user.service"
 import { User } from "../user";
 import { Router } from "@angular/router";
 import { Feedback, FeedbackType, FeedbackPosition } from "nativescript-feedback";
@@ -15,7 +15,7 @@ import { TextField } from "tns-core-modules/ui/text-field";
 export class LoginComponent {
 	private feedback: Feedback;
 
-	@ViewChild('password') input;
+  @ViewChild("password", { static: false }) input: ElementRef;
 
 	// define here the possible login codes 
 	user: User
