@@ -28,11 +28,43 @@ class GameManager:
         self.readCombination = None
         self.selector = None
         self.currentDeviceName = None
+        self.codes = {
+           '0010086746' : 'IMPLIES',
+           '0010247315' : 'NOT',
+           '0010192917': 'NOT',
+           '0010059599' : 'AND',
+           '0010179837' : 'AND',
+           '0000110295' : 'OR',
+           '0010210257' : '(',
+           '0000217439' : '(',
+           '0000105974' : ')',
+           '0010196425' : ')',
+           '0010217966' : 'E',
+           '0010203880' : 'L',
+           '0000494987' : 'L',
+           '0010181421' : 'K',
+           '0010042671' : 'K',
+                
+        '''
+                   → 		0010086746
+        NOT 		0010247315		0010192917
+        AND		0010059599		0010179837
+        OR		0000110295
+        (		0010210257		0000217439
+        )		0000105974		0010196425
+        Espresso	0010217966
+        Latte Ma.	0010203880		0000494987
+        Kaffee		0010181421		0010042671
+        '''
+           
         
-   # Fill devices
+     
     @classmethod
-    def getDevices(self, solution, devices):
-            print(lol)
+    def mapInputToSymbol(self, input):
+    # map input code to symbol
+          print(self.codes[input])
+          #return self.codes[input]
+    
 
     # Fill devices
     @classmethod
@@ -139,10 +171,14 @@ class GameManager:
         print("read: ")
         print(read["deviceName"])
         print(read["value"])
+        convertedSymbols = []
         for key, _ in self.idealCombination.items():
-            if self.idealCombination[key] != self.readCombination[key]:
-                return False
-        return True
+            item = self.readCombination[key]
+            convertedSymbols.append(self.mapInputToSymbol(item))
+            #if self.idealCombination[key] != self.readCombination[key]:
+             #   return False
+        print(convertedSymbols)
+        return convertedSymbols
 
 
     # get key where reader name is deviceName by iterating through the
