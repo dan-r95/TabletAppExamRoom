@@ -45,9 +45,9 @@ class GameManager:
         self.devicesMap = None
 
     @classmethod
-    def mapInputToSymbol(self, input):
+    def mapInputToSymbol(self, inp):
         # map input code to symbol
-        return codes[input]
+        return codes[inp]
 
     # Fill devices
     @classmethod
@@ -143,12 +143,9 @@ class GameManager:
     @staticmethod
     # return true if both objects have the same values
     def checkIfOkay(self, ideal, read):
-        convertedSymbols = []
-        for key, _ in self.idealCombination.items():
-            item = self.readCombination[key]
-            convertedSymbols.append(self.mapInputToSymbol(item))
-            # if self.idealCombination[key] != self.readCombination[key]:
-            #   return False
+        convertedSymbols = ''
+        for item in self.readCombination['value']:
+            convertedSymbols += self.mapInputToSymbol(item)
         print(convertedSymbols)
         return convertedSymbols
 
@@ -207,11 +204,13 @@ class GameManager:
                             actualSolution = self.checkIfOkay(
                                 self, self.idealCombination, self.readCombination)
                             print(actualSolution)
-                            result = g.getWolframOutput(solution["param1"], solution["param2"], solution["param3"], solution["param4"],
-                                                        solution["param5"], solution["param6"], solution["param7"], actualSolution)
+                           
+                            result = self.getWolframOutput(solution["param1"], solution["param2"], solution["param3"], solution["param4"],
+                                solution["param5"], solution["param6"], solution["param7"], actualSolution)
+                             
                             # if wolfram alpha equivalent test returns true --> turn on the power
                             print(result)
-                            if result:
+                            if result == 1:
                                 # Solution is found - Game over :)
                                 print("Steckdose an!!")
                                 print("Now lets trigger the power!")
@@ -221,7 +220,9 @@ class GameManager:
                                 time.sleep(120000)
                                 self.callPower("00011", "1")
                                 exit(0)
-                            container = []
+                            elif result == 0:
+                                print('not a valid solution :/ try again')
+                        container = []
                     else:
                         container.append(digit)    
         
@@ -245,8 +246,8 @@ class GameManager:
     def getWolframOutput(cls, element1, element2, element3, element4, element5, element6, element7, solution):
         command = '/usr/local/bin/callWolframAlpha.sh'
         # parameter=expression
-        parameter = 'Equivalent['+element1+element2+element3+element4 + \
-            element5+element6+element7+','+solution+']//TautologyQ'
+        parameter = 'Equivalent['+str(element1)+str(element2)+str(element3)+str(element4) + \
+            str(element5)+str(element6)+str(element7)+','+solution+']//TautologyQ'
         return call([command, parameter])
 
     # opens a subprocess which calls the funk module sending data to the power supply
@@ -316,9 +317,9 @@ codes = {
             '0010086746': 'IMPLIES',
             '0010247315': 'NOT',
             '0010192917': 'NOT',
-            '0010059599': 'AND',
-            '0010179837': 'AND',
-            '0000110295': 'OR',
+            '0010059599': '&&',
+            '0010179837': '&&',
+            '0000110295': '||',
             '0010210257': '(',
             '0000217439': '(',
             '0000105974': ')',
@@ -330,6 +331,8 @@ codes = {
             '0010042671': 'K'
 }
 
+print(codes)
+print(codes['0010059599'])
 
 
 HOST = '192.168.43.9'  # Symbolic name, meaning all available interfaces
