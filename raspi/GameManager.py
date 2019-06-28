@@ -6,13 +6,16 @@ import socket
 from io import BytesIO
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from select import select
-#from evdev import InputDevice, categorize, ecodes
+import evdev
+from evdev import InputDevice, categorize, ecodes
 import glob
 from os import listdir
 from os.path import isfile, join
 import asyncio
+import subprocess
 from subprocess import PIPE, Popen, call
 import time
+
 
 
 class GameManager:
@@ -25,6 +28,11 @@ class GameManager:
         self.readCombination = None
         self.selector = None
         self.currentDeviceName = None
+        
+   # Fill devices
+    @classmethod
+    def getDevices(self, solution, devices):
+            print(lol)
 
     # Fill devices
     @classmethod
@@ -35,18 +43,12 @@ class GameManager:
         self.devicesMatching = []
 
         # find devices we need (keyboard rfid reader) from /dev/input
-        for device in devices:
+        '''for device in devices:
             if 'usb' in device and 'event-kbd' in device:
                 end = device.split('usb-usb-', 1)[1]
                 print(end)
                 self.devicesMatching.append(end)
-
-        """"
-        print("devices matching")
-        print(self.devicesMatching)
-        self.devicesMatching = self.devicesMatching.sort()
-        print(self.devicesMatching)
-        """
+        '''
         # add devices here
         # TODO: handle expection when none are found
         self.devices = map(InputDevice, devices)
@@ -81,8 +83,6 @@ class GameManager:
         # print(devices.values())
 
         # the codes to unlock for each reader
-        len(solution)
-        # len(devices)
         assert len(solution) == len(
             devices), "length must be equal of solution provided and number of devices"
 
@@ -103,6 +103,7 @@ class GameManager:
 
     @classmethod
     def initializeCombination(cls, devices):
+        # these functions give more information about the current device if needed 
         # init values in dictionary to be read and filled out
         # print(devices[3].capabilities(verbose = True ))
         # print(devices[3].leds(verbose = True ))
@@ -143,10 +144,12 @@ class GameManager:
                 return False
         return True
 
+
+    # get key where reader name is deviceName by iterating through the
+    # device and finding the index
     @staticmethod
     def writeToDictionary(key, value, readCombination):
-        # get key where reader name is deviceName by iterating through the
-        # device and finding the index
+        
         j = 0
         for _ in readCombination["deviceName"]:
             if readCombination["deviceName"][j] == key:
@@ -154,7 +157,8 @@ class GameManager:
                 break
             else:
                 j += 1
-
+                
+    # for every object in the array look if the tag already  exists and if set that value None --> delete
     @classmethod
     def checkIfDuplicateAndIfDelete(self, tag):
         if tag in self.readCombination["value"]:
@@ -168,10 +172,7 @@ class GameManager:
 
     @classmethod
     def beginReading(self):
-        # adapted from
-        # http://domoticx.com/nfc-rfid-hardware-usb-stick-syc-idic-usb-reader/
-
-        # print(self.devices)
+        # adapted from http://domoticx.com/nfc-rfid-hardware-usb-stick-syc-idic-usb-reader/
 
         async def print_events(device):
             container = []
@@ -209,7 +210,8 @@ class GameManager:
         loop = asyncio.get_event_loop()
         loop.run_forever()
 
-    # follow other steps:
+
+
     # https://mathematica.stackexchange.com/questions/4643/how-to-use-mathematica-functions-in-python-programs
     # hacky way to call wolfram alpha from python
     @classmethod
@@ -220,12 +222,15 @@ class GameManager:
             element5+element6+element7+','+solution+']//TautologyQ'
         call([command, parameter])
 
+    # opens a subprocess which calls the funk module sending data to the power supply
     @classmethod
     def callPower(cls, code, toggle):
         proc = subprocess.Popen(["/home/pi/raspberry-remote/send",
                                  code,
                                  "4",
                                  toggle, ], stdin=PIPE, stdout=PIPE)
+
+
 
 
 '''
@@ -243,7 +248,9 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
         body = self.rfile.read(content_length)
-        self.handleJson(body)
+        # decode byte to string
+        json = body.decode('utf8').replace("'", '"')
+        self.handleJson(json)
         self.send_response(200)
         self.end_headers()
         response = BytesIO()
@@ -251,6 +258,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
     def handleJson(self, body):
 		### MAIN LOOP
+        print(body)
         l = json.loads(body)
         assert len(l) == 7, 'json body should have 7 parameters'
         print(l.values())
@@ -265,14 +273,14 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                    '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.2:1.0-event-kbd', '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.1:1.0-event-kbd',
                    '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.3:1.0-event-kbd']
         #solution = ["0010181421", "bar"]
-        #g.getDevices(solution, devices)
-        # g.beginReading()
+        g.getDevices(solution, devices)
+        g.beginReading()
         actualSolution = 'a&&b||a&&c'
         g.getWolframOutput(l["param1"], l["param2"], l["param3"], l["param4"],
                            l["param5"], l["param6"], l["param7"], actualSolution)
 
 
-HOST = '192.168.178.20'  # Symbolic name, meaning all available interfaces
+HOST = '192.168.43.9'  # Symbolic name, meaning all available interfaces
 PORT = 8888  # Arbitrary non-privileged port
 # Run the whole program
 httpd = HTTPServer((HOST, PORT), SimpleHTTPRequestHandler)
