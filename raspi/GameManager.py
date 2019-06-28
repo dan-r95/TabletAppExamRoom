@@ -16,7 +16,16 @@ import subprocess
 from subprocess import PIPE, Popen, call
 import time
 
-
+  #            → 		0010086746
+# NOT 		0010247315		0010192917
+# AND		0010059599		0010179837
+# OR		0000110295
+# (		0010210257		0000217439
+# )		0000105974		0010196425
+# Espresso	0010217966
+# Latte Ma.	0010203880		0000494987
+# Kaffee		0010181421		0010042671
+# """
 
 class GameManager:
 
@@ -29,42 +38,34 @@ class GameManager:
         self.selector = None
         self.currentDeviceName = None
         self.codes = {
-           '0010086746' : 'IMPLIES',
-           '0010247315' : 'NOT',
+           '0010086746': 'IMPLIES',
+           '0010247315': 'NOT',
            '0010192917': 'NOT',
-           '0010059599' : 'AND',
-           '0010179837' : 'AND',
-           '0000110295' : 'OR',
-           '0010210257' : '(',
-           '0000217439' : '(',
-           '0000105974' : ')',
-           '0010196425' : ')',
-           '0010217966' : 'E',
-           '0010203880' : 'L',
-           '0000494987' : 'L',
-           '0010181421' : 'K',
-           '0010042671' : 'K',
-                
-        '''
-                   → 		0010086746
-        NOT 		0010247315		0010192917
-        AND		0010059599		0010179837
-        OR		0000110295
-        (		0010210257		0000217439
-        )		0000105974		0010196425
-        Espresso	0010217966
-        Latte Ma.	0010203880		0000494987
-        Kaffee		0010181421		0010042671
-        '''
-           
+           '0010059599': 'AND',
+           '0010179837': 'AND',
+           '0000110295': 'OR',
+           '0010210257': '(',
+           '0000217439': '(',
+           '0000105974': ')',
+           '0010196425': ')',
+           '0010217966': 'E',
+           '0010203880': 'L',
+           '0000494987': 'L',
+           '0010181421': 'K',
+           '0010042671': 'K'
+        }
+
         
-     
+    
+
+
+
     @classmethod
     def mapInputToSymbol(self, input):
     # map input code to symbol
           print(self.codes[input])
-          #return self.codes[input]
-    
+          # return self.codes[input]
+
 
     # Fill devices
     @classmethod
@@ -135,7 +136,7 @@ class GameManager:
 
     @classmethod
     def initializeCombination(cls, devices):
-        # these functions give more information about the current device if needed 
+        # these functions give more information about the current device if needed
         # init values in dictionary to be read and filled out
         # print(devices[3].capabilities(verbose = True ))
         # print(devices[3].leds(verbose = True ))
@@ -175,7 +176,7 @@ class GameManager:
         for key, _ in self.idealCombination.items():
             item = self.readCombination[key]
             convertedSymbols.append(self.mapInputToSymbol(item))
-            #if self.idealCombination[key] != self.readCombination[key]:
+            # if self.idealCombination[key] != self.readCombination[key]:
              #   return False
         print(convertedSymbols)
         return convertedSymbols
@@ -185,7 +186,7 @@ class GameManager:
     # device and finding the index
     @staticmethod
     def writeToDictionary(key, value, readCombination):
-        
+
         j = 0
         for _ in readCombination["deviceName"]:
             if readCombination["deviceName"][j] == key:
@@ -193,7 +194,7 @@ class GameManager:
                 break
             else:
                 j += 1
-                
+
     # for every object in the array look if the tag already  exists and if set that value None --> delete
     @classmethod
     def checkIfDuplicateAndIfDelete(self, tag):
@@ -293,7 +294,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(response.getvalue())
 
     def handleJson(self, body):
-		### MAIN LOOP
+		# MAIN LOOP
         print(body)
         l = json.loads(body)
         assert len(l) == 7, 'json body should have 7 parameters'
@@ -308,7 +309,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                    '/dev/input/by-path/platform-3f980000.usb-usb-0:1.2:1.0-event-kbd', '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.4:1.0-event-kbd',
                    '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.2:1.0-event-kbd', '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.1:1.0-event-kbd',
                    '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.3:1.0-event-kbd']
-        #solution = ["0010181421", "bar"]
+        # solution = ["0010181421", "bar"]
         g.getDevices(solution, devices)
         g.beginReading()
         actualSolution = 'a&&b||a&&c'
