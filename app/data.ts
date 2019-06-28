@@ -1,5 +1,5 @@
 export const data_user_simple_1 = [{
-	name: "Einkaufsliste 1",
+	name: "Einkaufsliste",
 	src: "",
 	description: `
 			<!doctype html>
@@ -22,28 +22,9 @@ export const data_user_simple_1 = [{
 `       }, {
 	name: "Hinweis",
 	src: "",
-	description: `<html><style type="text/css">
-			.tg  {border-collapse:collapse;border-spacing:0; style="font-size: 18px";}
-			.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
-			.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
-			.tg .tg-0lax{text-align:left;vertical-align:top}
-			</style>
-			<table class="tg">
-			<tr>
-				<th class="tg-0lax">Fach</th>
-				<th class="tg-0lax">Datum</th>
-			</tr>
-			<tr>
-				<td class="tg-0lax">Grundlagen der Informatik 1</td>
-				<td class="tg-0lax">11.3.2020</td>
-			</tr>
-			<tr>
-				<td class="tg-0lax">Grundlagen der Informatik 1 WdH</td>
-				<td class="tg-0lax">11.3.2002</td>
-			</tr>
-			</table></html>  `}];
+	description: `<html> Nach 7 Tassen erlangst du die Erleuchtung.</html>  `}];
 export const data_user_simple_2 = [{
-	name: "Einkaufsliste 2",
+	name: "Einkaufsliste",
 	src: "",
 	description: `
 			<!doctype html>
@@ -70,29 +51,10 @@ export const data_user_simple_2 = [{
 	`      }, {
 	name: "Hinweis",
 	src: "",
-	description: `<html><style type="text/css">
-			.tg  {border-collapse:collapse;border-spacing:0; style="font-size: 18px";}
-			.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
-			.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
-			.tg .tg-0lax{text-align:left;vertical-align:top}
-			</style>
-			<table class="tg">
-			<tr>
-				<th class="tg-0lax">Fach</th>
-				<th class="tg-0lax">Datum</th>
-			</tr>
-			<tr>
-				<td class="tg-0lax">Grundlagen der Informatik 1</td>
-				<td class="tg-0lax">11.3.2020</td>
-			</tr>
-			<tr>
-				<td class="tg-0lax">Grundlagen der Informatik 1 WdH</td>
-				<td class="tg-0lax">11.3.2002</td>
-			</tr>
-			</table></html>  `
+	description: `<html> Nach 7 Tassen erlangst du die Erleuchtung.</html>  `
 }];
 export const data_user_middle_1 = [{
-	name: "Einkaufsliste 3",
+	name: "Einkaufsliste",
 	src: "",
 	description: `
 			<!doctype html>
@@ -120,29 +82,10 @@ export const data_user_middle_1 = [{
 }, {
 	name: "Hinweis",
 	src: "",
-	description: `<html><style type="text/css">
-			.tg  {border-collapse:collapse;border-spacing:0; style="font-size: 18px";}
-			.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
-			.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
-			.tg .tg-0lax{text-align:left;vertical-align:top}
-			</style>
-			<table class="tg">
-			<tr>
-				<th class="tg-0lax">Fach</th>
-				<th class="tg-0lax">Datum</th>
-			</tr>
-			<tr>
-				<td class="tg-0lax">Grundlagen der Informatik 1</td>
-				<td class="tg-0lax">11.3.2020</td>
-			</tr>
-			<tr>
-				<td class="tg-0lax">Computeranimation WdH</td>
-				<td class="tg-0lax">11.3.1999</td>
-			</tr>
-			</table></html>  `
+	description: `<html> Nach 7 Tassen erlangst du die Erleuchtung.</html>  `
 }];
 export const data_user_middle_2 = [{
-	name: "Einkaufsliste 4",
+	name: "Einkaufsliste",
 	src: "",
 	description: `
 			<!doctype html>
@@ -170,29 +113,10 @@ export const data_user_middle_2 = [{
 {
 	name: "Hinweis",
 	src: "",
-	description: `<html><style type="text/css">
-			.tg  {border-collapse:collapse;border-spacing:0; style="font-size: 18px";}
-			.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
-			.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
-			.tg .tg-0lax{text-align:left;vertical-align:top}
-			</style>
-			<table class="tg">
-			<tr>
-				<th class="tg-0lax">Fach</th>
-				<th class="tg-0lax">Datum</th>
-			</tr>
-			<tr>
-				<td class="tg-0lax">Grundlagen der Informatik 1</td>
-				<td class="tg-0lax">11.3.2020</td>
-			</tr>
-			<tr>
-				<td class="tg-0lax">Grundlagen der Informatik 1 WdH</td>
-				<td class="tg-0lax">11.3.2002</td>
-			</tr>
-			</table></html>  `
+	description: `<html> Nach 7 Tassen erlangst du die Erleuchtung.</html>  `
 }];
 export const data_user_hard_1 = [{
-	name: "Einkaufsliste 5",
+	name: "Einkaufsliste",
 	src: "",
 	description: `
 			<!doctype html>
@@ -219,29 +143,10 @@ export const data_user_hard_1 = [{
 }, {
 	name: "Hinweis",
 	src: "",
-	description: `<html><style type="text/css">
-			.tg  {border-collapse:collapse;border-spacing:0; style="font-size: 18px";}
-			.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
-			.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
-			.tg .tg-0lax{text-align:left;vertical-align:top}
-			</style>
-			<table class="tg">
-			<tr>
-				<th class="tg-0lax">Fach</th>
-				<th class="tg-0lax">Datum</th>
-			</tr>
-			<tr>
-				<td class="tg-0lax">Grundlagen der Informatik 1</td>
-				<td class="tg-0lax">11.3.2020</td>
-			</tr>
-			<tr>
-				<td class="tg-0lax">Computeranimation WdH</td>
-				<td class="tg-0lax">11.3.1999</td>
-			</tr>
-			</table></html>  `
+	description: `<html>Nach 7 Tassen erlangst du die Erleuchtung.</html>  `
 }];
 export const data_user_hard_2 = [{
-	name: "Einkaufsliste 6",
+	name: "Einkaufsliste",
 	src: "",
 	description: `
 			<!doctype html>
@@ -269,26 +174,9 @@ export const data_user_hard_2 = [{
 {
 	name: "Hinweis",
 	src: "",
-	description: `<html><style type="text/css">
-			.tg  {border-collapse:collapse;border-spacing:0; style="font-size: 18px";}
-			.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
-			.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
-			.tg .tg-0lax{text-align:left;vertical-align:top}
-			</style>
-			<table class="tg">
-			<tr>
-				<th class="tg-0lax">Fach</th>
-				<th class="tg-0lax">Datum</th>
-			</tr>
-			<tr>
-				<td class="tg-0lax">Grundlagen der Informatik 1</td>
-				<td class="tg-0lax">11.3.2020</td>
-			</tr>
-			<tr>
-				<td class="tg-0lax">Grundlagen der Informatik 1 WdH</td>
-				<td class="tg-0lax">11.3.2002</td>
-			</tr>
-			</table></html>  `
+	description: `<html>
+			Nach 7 Tassen erlangst du die Erleuchtung.
+			</html>  `
 },
 {
 	name: "Webseite",
