@@ -15,6 +15,7 @@ import asyncio
 import subprocess
 from subprocess import PIPE, Popen, call
 import time
+from threading import Thread
 
   #            → 		0010086746
 # NOT 		0010247315		0010192917
@@ -206,7 +207,16 @@ class GameManager:
                     break
                 else:
                     j += 1
-
+                    
+    # if any index in the array is not filled return false, only check with wolfram alpha if all slots are filled
+    @classmethod
+    def checkIfAllSlotsAreFilled(self):
+            for i in self.readCombination["value"]:
+                    if  self.readCombination["value"][i] == None:
+                        return False
+            return True
+         
+            
     @classmethod
     def beginReading(self):
         # adapted from http://domoticx.com/nfc-rfid-hardware-usb-stick-syc-idic-usb-reader/
@@ -223,20 +233,27 @@ class GameManager:
                         self.checkIfDuplicateAndIfDelete(tag)
                         self.writeToDictionary(
                             devicePhysName, tag, self.readCombination)
-                        # returns true if both data structures have equal
-                        # values
-                        result = self.checkIfOkay(
-                            self, self.idealCombination, self.readCombination)
-                        if result:
-                            # Solution is found - Game over :)
-                            print("Steckdose an!!")
-                            print("Now lets trigger the power!")
-                            self.callPower("00011", "1")
-                            # power of coffee machine after some seconds and brewing is over
-                            time.sleep(5)
-                            self.callPower("00011", "0")
-                            break
-                        container = []
+                        # returns true if both data structures have equal values
+                        # if all keys are filled
+                        if checkIfAllSlotsAreFilled():
+                                actualSolution = self.checkIfOkay(
+                                    self, self.idealCombination, self.readCombination)
+                                print(actualSolution)
+                                result = g.getWolframOutput(l["param1"], l["param2"], l["param3"], l["param4"],
+                                   l["param5"], l["param6"], l["param7"], actualSolution)
+                                # if wolfram alpha equivalent test returns true --> turn on the power 
+                                print(result)
+                                if result:
+                                    # Solution is found - Game over :)
+                                    print("Steckdose an!!")
+                                    print("Now lets trigger the power!")
+                                    self.callPower("00011", "1")
+                                    # power of coffee machine after some seconds and brewing is over
+                                    # sleep 2 minutes, power off, then exit programm 
+                                    time.sleep(120000)
+                                    self.callPower("00011", "1")
+                                    exit(0)
+                                container = []
                     else:
                         container.append(digit)
 
@@ -257,7 +274,7 @@ class GameManager:
         # parameter=expression
         parameter = 'Equivalent['+element1+element2+element3+element4 + \
             element5+element6+element7+','+solution+']//TautologyQ'
-        call([command, parameter])
+        return call([command, parameter])
 
     # opens a subprocess which calls the funk module sending data to the power supply
     @classmethod
@@ -276,25 +293,31 @@ class GameManager:
 
 
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
-
+    # should use this to reset server 
     def do_GET(self):
         self.send_response(200)
         self.end_headers()
-        self.wfile.write(b'Hello, world!')
+        #exit(0)
 
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
         body = self.rfile.read(content_length)
         # decode byte to string
         json = body.decode('utf8').replace("'", '"')
-        self.handleJson(json)
-        self.send_response(200)
-        self.end_headers()
         response = BytesIO()
         self.wfile.write(response.getvalue())
+        self.send_response(200)
+        self.end_headers()
+        self.handleJson(json)
+        #thread = Thread(target = self.handleJson, args = (json ))
+        #thread.start()
+        #thread.join()
+        #print("thread finished...exiting")
+        
+        
 
     def handleJson(self, body):
-		# MAIN LOOP
+        # MAIN LOOP
         print(body)
         l = json.loads(body)
         assert len(l) == 7, 'json body should have 7 parameters'
@@ -311,15 +334,14 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                    '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.3:1.0-event-kbd']
         # solution = ["0010181421", "bar"]
         g.getDevices(solution, devices)
+        # loop until input
         g.beginReading()
-        actualSolution = 'a&&b||a&&c'
-        g.getWolframOutput(l["param1"], l["param2"], l["param3"], l["param4"],
-                           l["param5"], l["param6"], l["param7"], actualSolution)
+        
 
 
 HOST = '192.168.43.9'  # Symbolic name, meaning all available interfaces
 PORT = 8888  # Arbitrary non-privileged port
 # Run the whole program
 httpd = HTTPServer((HOST, PORT), SimpleHTTPRequestHandler)
-print("listening...")
+print("listening on " + str(HOST) + " port: " + str(PORT) + "...")
 httpd.serve_forever()
