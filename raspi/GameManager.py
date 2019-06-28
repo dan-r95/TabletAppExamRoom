@@ -30,8 +30,6 @@ from threading import Thread
 # """
 
 
-
-
 class GameManager:
 
     def __init__(self):
@@ -204,10 +202,10 @@ class GameManager:
                             actualSolution = self.checkIfOkay(
                                 self, self.idealCombination, self.readCombination)
                             print(actualSolution)
-                           
+
                             result = self.getWolframOutput(solution["param1"], solution["param2"], solution["param3"], solution["param4"],
-                                solution["param5"], solution["param6"], solution["param7"], actualSolution)
-                             
+                                                           solution["param5"], solution["param6"], solution["param7"], actualSolution)
+
                             # if wolfram alpha equivalent test returns true --> turn on the power
                             print(result)
                             if result == 1:
@@ -224,10 +222,9 @@ class GameManager:
                                 print('not a valid solution :/ try again')
                         container = []
                     else:
-                        container.append(digit)    
-        
+                        container.append(digit)
 
-        # grab all devices an read from them indefinetly 
+        # grab all devices an read from them indefinetly
         devices = map(InputDevice, devices)
         for device in devices:
             device.grab()  # no more raw_input
@@ -236,9 +233,6 @@ class GameManager:
         loop = asyncio.get_event_loop()
         loop.run_forever()
         print(solution)
-        
-
-        
 
     # https://mathematica.stackexchange.com/questions/4643/how-to-use-mathematica-functions-in-python-programs
     # hacky way to call wolfram alpha from python
@@ -247,7 +241,8 @@ class GameManager:
         command = '/usr/local/bin/callWolframAlpha.sh'
         # parameter=expression
         parameter = 'Equivalent['+str(element1)+str(element2)+str(element3)+str(element4) + \
-            str(element5)+str(element6)+str(element7)+','+solution+']//TautologyQ'
+            str(element5)+str(element6)+str(element7) + \
+            ','+solution+']//TautologyQ'
         return call([command, parameter])
 
     # opens a subprocess which calls the funk module sending data to the power supply
@@ -291,8 +286,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         print(body)
         l = json.loads(body)
         assert len(l) == 7, 'json body should have 7 parameters'
-      
-        
+
         # UPDATE the SOLUTION we need!
         g = GameManager()
         g.callPower("00011", "0")
@@ -308,27 +302,24 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         g.beginReading(l, devices)
 
 
-
-
-#### SERVER MAIN 
-
+# SERVER MAIN
 # global codes
 codes = {
-            '0010086746': 'IMPLIES',
-            '0010247315': 'NOT',
-            '0010192917': 'NOT',
-            '0010059599': '&&',
-            '0010179837': '&&',
-            '0000110295': '||',
-            '0010210257': '(',
-            '0000217439': '(',
-            '0000105974': ')',
-            '0010196425': ')',
-            '0010217966': 'E',
-            '0010203880': 'L',
-            '0000494987': 'L',
-            '0010181421': 'K',
-            '0010042671': 'K'
+    '0010086746': 'IMPLIES',
+    '0010247315': 'NOT',
+    '0010192917': 'NOT',
+    '0010059599': '&&',
+    '0010179837': '&&',
+    '0000110295': '||',
+    '0010210257': '(',
+    '0000217439': '(',
+    '0000105974': ')',
+    '0010196425': ')',
+    '0010217966': 'E',
+    '0010203880': 'L',
+    '0000494987': 'L',
+    '0010181421': 'K',
+    '0010042671': 'K'
 }
 
 print(codes)

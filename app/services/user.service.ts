@@ -23,21 +23,12 @@ export class UserService {
         this.serverAdress = ''
     }
 
-    public login(user: User): Observable<{}> {
-        alert("login")
-        // if (!user.email || !user.password) {
-        //     return throwError("Please provide both an email address and password.");
-        // }
-        if (user.email == "1") {
-            return of(new HttpResponse({ status: 200 }));
-        }
-    }
-
     public setServerAdress(address): void {
         this.serverAdress = address;
     }
 
     public setUser(user: User) {
+        console.log(user)
         this.user = user;
     }
 
@@ -47,44 +38,14 @@ export class UserService {
 
     private handleError(error: HttpErrorResponse) {
         console.log(error)
-		/*if (error.error instanceof ErrorEvent) {
-			// A client-side or network error occurred. Handle it accordingly.
-			console.error('An error occurred:', error.error.message);
-		} else {*/
-        // The backend returned an unsuccessful response code.
-        // The response body may contain clues as to what went wrong,
-        if (error.status) {
-            /*this.feedback.warning({
-              message: `Backend returned code ${error.status}, ` +
-                `body was: ${error.error}`, duration: 2000 });*/
-        } else {
-            /*this.feedback.warning({
-              message: `Backend returned code ${error}`, duration: 2000
-            }); */
-        }
-        //}
 
-        alert('Something bad happened; please try again later.')
-
-        // inputType property can be dialogs.inputType.password, dialogs.inputType.text, or dialogs.inputType.email.
-        /*console.log(this.setServerAdress)
-        dialogs.prompt({
-            message: "Whoops, server verbindung failed! Neue IP eingeben",
-            okButtonText: "OK",
-            inputType: dialogs.inputType.text,
-            defaultText: this.serverAdress,
-        }).then(r => {
-            console.log("Dialog result: " + r.result + ", text: " + r.text);
-            this.setServerAdress(r.text)
-            this.sendSolution();
-        });*/
-
+        dialogs.alert('Something bad happened; please try again later.')
         // return an observable with a user-facing error message
         return throwError(
             'Something bad happened; please try again later.');
     };
 
-    public setSolution(user): void {
+    public setSolution(user: User): void {
         if (this.user.password !== undefined) {
             switch (this.user.password) {
                 case '1234':
