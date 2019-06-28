@@ -17,7 +17,8 @@ from subprocess import PIPE, Popen, call
 import time
 from threading import Thread
 
-  #            → 		0010086746
+# Mapping from rfid code to symbol
+#            → 		0010086746
 # NOT 		0010247315		0010192917
 # AND		0010059599		0010179837
 # OR		0000110295
@@ -27,6 +28,7 @@ from threading import Thread
 # Latte Ma.	0010203880		0000494987
 # Kaffee		0010181421		0010042671
 # """
+
 
 class GameManager:
 
@@ -39,34 +41,28 @@ class GameManager:
         self.selector = None
         self.currentDeviceName = None
         self.codes = {
-           '0010086746': 'IMPLIES',
-           '0010247315': 'NOT',
-           '0010192917': 'NOT',
-           '0010059599': 'AND',
-           '0010179837': 'AND',
-           '0000110295': 'OR',
-           '0010210257': '(',
-           '0000217439': '(',
-           '0000105974': ')',
-           '0010196425': ')',
-           '0010217966': 'E',
-           '0010203880': 'L',
-           '0000494987': 'L',
-           '0010181421': 'K',
-           '0010042671': 'K'
+            '0010086746': 'IMPLIES',
+            '0010247315': 'NOT',
+            '0010192917': 'NOT',
+            '0010059599': 'AND',
+            '0010179837': 'AND',
+            '0000110295': 'OR',
+            '0010210257': '(',
+            '0000217439': '(',
+            '0000105974': ')',
+            '0010196425': ')',
+            '0010217966': 'E',
+            '0010203880': 'L',
+            '0000494987': 'L',
+            '0010181421': 'K',
+            '0010042671': 'K'
         }
-
-        
-    
-
-
 
     @classmethod
     def mapInputToSymbol(self, input):
-    # map input code to symbol
-          print(self.codes[input])
-          # return self.codes[input]
-
+        # map input code to symbol
+        print(self.codes[input])
+        return self.codes[input]
 
     # Fill devices
     @classmethod
@@ -178,10 +174,9 @@ class GameManager:
             item = self.readCombination[key]
             convertedSymbols.append(self.mapInputToSymbol(item))
             # if self.idealCombination[key] != self.readCombination[key]:
-             #   return False
+            #   return False
         print(convertedSymbols)
         return convertedSymbols
-
 
     # get key where reader name is deviceName by iterating through the
     # device and finding the index
@@ -207,16 +202,15 @@ class GameManager:
                     break
                 else:
                     j += 1
-                    
+
     # if any index in the array is not filled return false, only check with wolfram alpha if all slots are filled
     @classmethod
     def checkIfAllSlotsAreFilled(self):
-            for i in self.readCombination["value"]:
-                    if  self.readCombination["value"][i] == None:
-                        return False
-            return True
-         
-            
+        for i in self.readCombination["value"]:
+            if self.readCombination["value"][i] == None:
+                return False
+        return True
+
     @classmethod
     def beginReading(self):
         # adapted from http://domoticx.com/nfc-rfid-hardware-usb-stick-syc-idic-usb-reader/
@@ -236,24 +230,24 @@ class GameManager:
                         # returns true if both data structures have equal values
                         # if all keys are filled
                         if checkIfAllSlotsAreFilled():
-                                actualSolution = self.checkIfOkay(
-                                    self, self.idealCombination, self.readCombination)
-                                print(actualSolution)
-                                result = g.getWolframOutput(l["param1"], l["param2"], l["param3"], l["param4"],
-                                   l["param5"], l["param6"], l["param7"], actualSolution)
-                                # if wolfram alpha equivalent test returns true --> turn on the power 
-                                print(result)
-                                if result:
-                                    # Solution is found - Game over :)
-                                    print("Steckdose an!!")
-                                    print("Now lets trigger the power!")
-                                    self.callPower("00011", "1")
-                                    # power of coffee machine after some seconds and brewing is over
-                                    # sleep 2 minutes, power off, then exit programm 
-                                    time.sleep(120000)
-                                    self.callPower("00011", "1")
-                                    exit(0)
-                                container = []
+                            actualSolution = self.checkIfOkay(
+                                self, self.idealCombination, self.readCombination)
+                            print(actualSolution)
+                            result = g.getWolframOutput(l["param1"], l["param2"], l["param3"], l["param4"],
+                                                        l["param5"], l["param6"], l["param7"], actualSolution)
+                            # if wolfram alpha equivalent test returns true --> turn on the power
+                            print(result)
+                            if result:
+                                # Solution is found - Game over :)
+                                print("Steckdose an!!")
+                                print("Now lets trigger the power!")
+                                self.callPower("00011", "1")
+                                # power of coffee machine after some seconds and brewing is over
+                                # sleep 2 minutes, power off, then exit programm
+                                time.sleep(120000)
+                                self.callPower("00011", "1")
+                                exit(0)
+                            container = []
                     else:
                         container.append(digit)
 
@@ -263,8 +257,6 @@ class GameManager:
 
         loop = asyncio.get_event_loop()
         loop.run_forever()
-
-
 
     # https://mathematica.stackexchange.com/questions/4643/how-to-use-mathematica-functions-in-python-programs
     # hacky way to call wolfram alpha from python
@@ -285,19 +277,17 @@ class GameManager:
                                  toggle, ], stdin=PIPE, stdout=PIPE)
 
 
-
-
 '''
 	Simple socket server using threads
 '''
 
 
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
-    # should use this to reset server 
+    # should use this to reset server
     def do_GET(self):
         self.send_response(200)
         self.end_headers()
-        #exit(0)
+        # exit(0)
 
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
@@ -310,11 +300,9 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.handleJson(json)
         #thread = Thread(target = self.handleJson, args = (json ))
-        #thread.start()
-        #thread.join()
+        # thread.start()
+        # thread.join()
         #print("thread finished...exiting")
-        
-        
 
     def handleJson(self, body):
         # MAIN LOOP
@@ -336,7 +324,6 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         g.getDevices(solution, devices)
         # loop until input
         g.beginReading()
-        
 
 
 HOST = '192.168.43.9'  # Symbolic name, meaning all available interfaces
