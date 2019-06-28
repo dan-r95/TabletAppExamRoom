@@ -30,6 +30,8 @@ from threading import Thread
 # """
 
 
+
+
 class GameManager:
 
     def __init__(self):
@@ -40,36 +42,18 @@ class GameManager:
         self.readCombination = None
         self.selector = None
         self.currentDeviceName = None
-        self.codes = {
-            '0010086746': 'IMPLIES',
-            '0010247315': 'NOT',
-            '0010192917': 'NOT',
-            '0010059599': 'AND',
-            '0010179837': 'AND',
-            '0000110295': 'OR',
-            '0010210257': '(',
-            '0000217439': '(',
-            '0000105974': ')',
-            '0010196425': ')',
-            '0010217966': 'E',
-            '0010203880': 'L',
-            '0000494987': 'L',
-            '0010181421': 'K',
-            '0010042671': 'K'
-        }
+        self.devicesMap = None
 
     @classmethod
     def mapInputToSymbol(self, input):
         # map input code to symbol
-        print(self.codes[input])
-        return self.codes[input]
+        return codes[input]
 
     # Fill devices
     @classmethod
     def getDevices(self, solution, devices):
         # register all found devices
         devices = glob.glob("/dev/input/by-path/*")
-        print(devices)
         self.devicesMatching = []
 
         # find devices we need (keyboard rfid reader) from /dev/input
@@ -80,12 +64,8 @@ class GameManager:
                 self.devicesMatching.append(end)
         '''
         # add devices here
-        # TODO: handle expection when none are found
         self.devices = map(InputDevice, devices)
         self.devicesMap = map(InputDevice, devices)
-        # for i in self.devices:
-        #    i.grab()
-        print(list(self.devicesMap))
 
         self.devices = {dev.fd: dev for dev in self.devices}
 
@@ -163,12 +143,6 @@ class GameManager:
     @staticmethod
     # return true if both objects have the same values
     def checkIfOkay(self, ideal, read):
-        print("ideal: ")
-        print(ideal["deviceName"])
-        print(ideal["value"])
-        print("read: ")
-        print(read["deviceName"])
-        print(read["value"])
         convertedSymbols = []
         for key, _ in self.idealCombination.items():
             item = self.readCombination[key]
@@ -207,14 +181,14 @@ class GameManager:
     @classmethod
     def checkIfAllSlotsAreFilled(self):
         for i in self.readCombination["value"]:
-            if self.readCombination["value"][i] == None:
+            # if any position in the array is none return false
+            if i == None:
                 return False
         return True
 
     @classmethod
-    def beginReading(self):
+    def beginReading(self, solution, devices):
         # adapted from http://domoticx.com/nfc-rfid-hardware-usb-stick-syc-idic-usb-reader/
-
         async def print_events(device):
             container = []
             async for event in device.async_read_loop():
@@ -229,12 +203,12 @@ class GameManager:
                             devicePhysName, tag, self.readCombination)
                         # returns true if both data structures have equal values
                         # if all keys are filled
-                        if checkIfAllSlotsAreFilled():
+                        if self.checkIfAllSlotsAreFilled():
                             actualSolution = self.checkIfOkay(
                                 self, self.idealCombination, self.readCombination)
                             print(actualSolution)
-                            result = g.getWolframOutput(l["param1"], l["param2"], l["param3"], l["param4"],
-                                                        l["param5"], l["param6"], l["param7"], actualSolution)
+                            result = g.getWolframOutput(solution["param1"], solution["param2"], solution["param3"], solution["param4"],
+                                                        solution["param5"], solution["param6"], solution["param7"], actualSolution)
                             # if wolfram alpha equivalent test returns true --> turn on the power
                             print(result)
                             if result:
@@ -249,14 +223,21 @@ class GameManager:
                                 exit(0)
                             container = []
                     else:
-                        container.append(digit)
+                        container.append(digit)    
+        
 
-        for device in self.devicesMap:
+        # grab all devices an read from them indefinetly 
+        devices = map(InputDevice, devices)
+        for device in devices:
             device.grab()  # no more raw_input
             asyncio.ensure_future(print_events(device))
 
         loop = asyncio.get_event_loop()
         loop.run_forever()
+        print(solution)
+        
+
+        
 
     # https://mathematica.stackexchange.com/questions/4643/how-to-use-mathematica-functions-in-python-programs
     # hacky way to call wolfram alpha from python
@@ -309,7 +290,8 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         print(body)
         l = json.loads(body)
         assert len(l) == 7, 'json body should have 7 parameters'
-        print(l.values())
+      
+        
         # UPDATE the SOLUTION we need!
         g = GameManager()
         g.callPower("00011", "0")
@@ -320,10 +302,34 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                    '/dev/input/by-path/platform-3f980000.usb-usb-0:1.2:1.0-event-kbd', '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.4:1.0-event-kbd',
                    '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.2:1.0-event-kbd', '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.1:1.0-event-kbd',
                    '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.3:1.0-event-kbd']
-        # solution = ["0010181421", "bar"]
         g.getDevices(solution, devices)
         # loop until input
-        g.beginReading()
+        g.beginReading(l, devices)
+
+
+
+
+#### SERVER MAIN 
+
+# global codes
+codes = {
+            '0010086746': 'IMPLIES',
+            '0010247315': 'NOT',
+            '0010192917': 'NOT',
+            '0010059599': 'AND',
+            '0010179837': 'AND',
+            '0000110295': 'OR',
+            '0010210257': '(',
+            '0000217439': '(',
+            '0000105974': ')',
+            '0010196425': ')',
+            '0010217966': 'E',
+            '0010203880': 'L',
+            '0000494987': 'L',
+            '0010181421': 'K',
+            '0010042671': 'K'
+}
+
 
 
 HOST = '192.168.43.9'  # Symbolic name, meaning all available interfaces
