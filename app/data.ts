@@ -22,7 +22,7 @@ export const data_user_simple_1 = [{
 `       }, {
 	name: "Hinweis",
 	src: "",
-	description: `<html> Nach 7 Tassen erlangst du die Erleuchtung.</html>  `}];
+	description: `<html> Wenn 7 Tassen stehen, erlangst du nach 10 Sekunden die Erleuchtung.</html>  `}];
 export const data_user_simple_2 = [{
 	name: "Einkaufsliste",
 	src: "",
@@ -51,7 +51,7 @@ export const data_user_simple_2 = [{
 	`      }, {
 	name: "Hinweis",
 	src: "",
-	description: `<html> Nach 7 Tassen erlangst du die Erleuchtung.</html>  `
+	description: `<html> Wenn 7 Tassen stehen, erlangst du nach 10 Sekunden die Erleuchtung.</html>  `
 }];
 export const data_user_middle_1 = [{
 	name: "Einkaufsliste",
@@ -82,7 +82,7 @@ export const data_user_middle_1 = [{
 }, {
 	name: "Hinweis",
 	src: "",
-	description: `<html> Nach 7 Tassen erlangst du die Erleuchtung.</html>  `
+	description: `<html> Wenn 7 Tassen stehen, erlangst du nach 10 Sekunden die Erleuchtung.</html>  `
 }];
 export const data_user_middle_2 = [{
 	name: "Einkaufsliste",
@@ -113,7 +113,7 @@ export const data_user_middle_2 = [{
 {
 	name: "Hinweis",
 	src: "",
-	description: `<html> Nach 7 Tassen erlangst du die Erleuchtung.</html>  `
+	description: `<html> Wenn 7 Tassen stehen, erlangst du nach 10 Sekunden die Erleuchtung.</html>  `
 }];
 export const data_user_hard_1 = [{
 	name: "Einkaufsliste",
@@ -143,7 +143,7 @@ export const data_user_hard_1 = [{
 }, {
 	name: "Hinweis",
 	src: "",
-	description: `<html>Nach 7 Tassen erlangst du die Erleuchtung.</html>  `
+	description: `<html>Wenn 7 Tassen stehen, erlangst du nach 10 Sekunden die Erleuchtung.</html>  `
 }];
 export const data_user_hard_2 = [{
 	name: "Einkaufsliste",
@@ -175,7 +175,7 @@ export const data_user_hard_2 = [{
 	name: "Hinweis",
 	src: "",
 	description: `<html>
-			Nach 7 Tassen erlangst du die Erleuchtung.
+			Wenn 7 Tassen stehen, erlangst du nach 10 Sekunden die Erleuchtung.
 			</html>  `
 },
 {
