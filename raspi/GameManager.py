@@ -13,7 +13,7 @@ from os import listdir
 from os.path import isfile, join
 import asyncio
 import subprocess
-from subprocess import PIPE, Popen, call
+from subprocess import PIPE, Popen, call, check_output
 import time
 from threading import Thread
 
@@ -51,16 +51,9 @@ class GameManager:
     @classmethod
     def getDevices(self, solution, devices):
         # register all found devices
-        devices = glob.glob("/dev/input/by-path/*")
-        self.devicesMatching = []
 
         # find devices we need (keyboard rfid reader) from /dev/input
-        '''for device in devices:
-            if 'usb' in device and 'event-kbd' in device:
-                end = device.split('usb-usb-', 1)[1]
-                print(end)
-                self.devicesMatching.append(end)
-        '''
+     
         # add devices here
         self.devices = map(InputDevice, devices)
         self.devicesMap = map(InputDevice, devices)
@@ -193,6 +186,7 @@ class GameManager:
                         # create and dump the tag
                         tag = "".join(i.strip('KEY_') for i in container)
                         devicePhysName = device.path
+                        print(devicePhysName)
                         self.checkIfDuplicateAndIfDelete(tag)
                         self.writeToDictionary(
                             devicePhysName, tag, self.readCombination)
@@ -207,18 +201,19 @@ class GameManager:
                                                            solution["param5"], solution["param6"], solution["param7"], actualSolution)
 
                             # if wolfram alpha equivalent test returns true --> turn on the power
+                            result = result.decode('utf-8')
                             print(result)
-                            if result == 1:
+                            if 'True' in result:
                                 # Solution is found - Game over :)
                                 print("Steckdose an!!")
                                 print("Now lets trigger the power!")
                                 self.callPower("00011", "1")
                                 # power of coffee machine after some seconds and brewing is over
-                                # sleep 2 minutes, power off, then exit programm
-                                time.sleep(120000)
-                                self.callPower("00011", "1")
-                                exit(0)
-                            elif result == 0:
+                                # sleep 2 minutes, 30sec, power off, then exit programm
+                                time.sleep(150)
+                                self.callPower("00011", "0")
+                                exit()
+                            elif 'Invalid' in result or 'False' in result:
                                 print('not a valid solution :/ try again')
                         container = []
                     else:
@@ -240,10 +235,12 @@ class GameManager:
     def getWolframOutput(cls, element1, element2, element3, element4, element5, element6, element7, solution):
         command = '/usr/local/bin/callWolframAlpha.sh'
         # parameter=expression
-        parameter = 'Equivalent['+str(element1)+str(element2)+str(element3)+str(element4) + \
+        parameters = 'Equivalent['+str(element1)+str(element2)+str(element3)+str(element4) + \
             str(element5)+str(element6)+str(element7) + \
             ','+solution+']//TautologyQ'
-        return call([command, parameter])
+        return check_output([command, parameters])
+        #proc = subprocess.Popen([command], stdin=PIPE, stdout=PIPE)
+        #return call([command, parameter])
 
     # opens a subprocess which calls the funk module sending data to the power supply
     @classmethod
@@ -257,14 +254,17 @@ class GameManager:
 '''
 	Simple socket server using threads
 '''
-
-
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
     # should use this to reset server
     def do_GET(self):
         self.send_response(200)
         self.end_headers()
         # exit(0)
+        
+    #def sendToClient(self, message):
+     #       
+        #self.send_content('192.168.
+       # httpd
 
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
@@ -284,8 +284,8 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
     def handleJson(self, body):
         # MAIN LOOP
         print(body)
-        l = json.loads(body)
-        assert len(l) == 7, 'json body should have 7 parameters'
+        params = json.loads(body)
+        assert len(params) == 7, 'json body should have 7 parameters'
 
         # UPDATE the SOLUTION we need!
         g = GameManager()
@@ -293,13 +293,17 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         # fill our solution here
         solution = ["0000405226", "0010247315", "0010210257",
                     "0010086746", "0010203880", "0010181421", "0010217966"]
-        devices = ['/dev/input/by-path/platform-3f980000.usb-usb-0:1.3:1.0-event-kbd', '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.3:1.0-event-kbd',
-                   '/dev/input/by-path/platform-3f980000.usb-usb-0:1.2:1.0-event-kbd', '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.4:1.0-event-kbd',
-                   '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.2:1.0-event-kbd', '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.1:1.0-event-kbd',
-                   '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.3:1.0-event-kbd']
+        devices = ['/dev/input/by-path/platform-3f980000.usb-usb-0:1.2:1.0-event-kbd',
+                '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.3:1.0-event-kbd',
+                '/dev/input/by-path/platform-3f980000.usb-usb-0:1.3:1.0-event-kbd',
+                '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.1:1.0-event-kbd',
+                '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.2:1.0-event-kbd',
+                '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.3:1.0-event-kbd',
+                '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.4:1.0-event-kbd',
+                ]
         g.getDevices(solution, devices)
         # loop until input
-        g.beginReading(l, devices)
+        g.beginReading(params, devices)
 
 
 # SERVER MAIN
