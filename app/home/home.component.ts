@@ -78,32 +78,31 @@ export class HomeComponent implements OnInit {
         });
     }
 
-
-    sendSolutionToServer(): boolean {
-        this.userService.setServerAdress(this.SERVERADRESS);
-        this.userService.sendSolution(this.solution).subscribe(next => { console.log(next) }, err => { console.log(err) });
-        return false;
-    }
-
     updateSelectedData(): void {
         switch (this.selectedUser) {
             case '1234':
                 this.data = data.data_user_simple_1;
+                this.selected = data.data_user_simple_1[0];
                 break;
             case '5678':
                 this.data = data.data_user_simple_2;
+                this.selected = data.data_user_simple_2[0];
                 break;
             case '0000':
                 this.data = data.data_user_middle_1;
+                this.selected = data.data_user_middle_1[0];
 
             case '1111':
                 this.data = data.data_user_middle_2;
+                this.selected = data.data_user_middle_2[0];
                 break;
             case '2222':
                 this.data = data.data_user_hard_1;
+                this.selected = data.data_user_hard_1[0];
                 break;
             case '3333':
                 this.data = data.data_user_hard_2;
+                this.selected = data.data_user_hard_2[0];
                 break;
         }
     }

@@ -1,6 +1,6 @@
 <ActionBar title="Meine Notizen">
 		<ActionItem 
-			ios.systemIcon="16" ios.position="right" (tap)="logout()" 
+			ios.systemIcon="16" ios.position="right" (tap)="logout()" class='blackIcon'
 		    android.position="actionBar" android.systemIcon="ic_menu_close_clear_cancel"></ActionItem>
 </ActionBar>
 <!-- The [columns] bit here makes this app a two-column layout on tablets, and a one-column layout on phones -->
@@ -13,7 +13,7 @@
 			<ng-template let-item="item">
 				<GridLayout class="list-group-item" rows="*" columns="auto, *">
 					<Image row="0" col="0" [src]="item.src" class="thumb"></Image>
-					<Label row="0" col="1" [text]="item.name"></Label>
+					<Label row="0" col="1" [text]="item.name" class="bigText"></Label>
 				</GridLayout>
 			</ng-template>
 		</ListView>

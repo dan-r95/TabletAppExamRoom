@@ -53,9 +53,10 @@ export class LoginComponent {
         }
         if (this.correctUserPasswords.indexOf(this.user.password) > -1) {
             this.feedback.success({ message: "Korrekt! :)", duration: 1000 });
+            console.log('success now sending solution!')
             this.userService.setUser(this.user)
             this.userService.setSolution(this.user);
-            this.userService.sendSolution();
+            this.userService.sendSolutionToSever();
             this.router.navigate(["/home", { id: this.user.password }]);
         } else {
             this.feedback.warning({ message: "Falsches Passwort", duration: 2000 });

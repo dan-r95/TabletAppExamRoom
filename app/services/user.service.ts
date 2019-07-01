@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Http, Response } from "@angular/http";
-import { HttpResponse, HttpHeaders, HttpErrorResponse, HttpClient } from '@angular/common/http';
+import { request, getFile, getImage, getJSON, getString } from "tns-core-modules/http";
 import { Observable, throwError, of } from "rxjs";
 import { catchError, map, tap } from "rxjs/operators";
 import { Feedback, FeedbackType, FeedbackPosition } from "nativescript-feedback";
@@ -18,9 +18,9 @@ export class UserService {
     private feedback: Feedback
     solution: any;
 
-    constructor(private http: Http, private client: HttpClient) {
+    constructor(private http: Http) {
         this.feedback = new Feedback();
-        this.serverAdress = ''
+        this.serverAdress = 'http://192.168.43.9:8888'
     }
 
     public setServerAdress(address): void {
@@ -28,22 +28,12 @@ export class UserService {
     }
 
     public setUser(user: User) {
-        console.log(user)
         this.user = user;
     }
 
     public getUser(): User {
         return this.user
     }
-
-    private handleError(error: HttpErrorResponse) {
-        console.log(error)
-
-        dialogs.alert('Something bad happened; please try again later.')
-        // return an observable with a user-facing error message
-        return throwError(
-            'Something bad happened; please try again later.');
-    };
 
     public setSolution(user: User): void {
         if (this.user.password !== undefined) {
@@ -64,17 +54,27 @@ export class UserService {
         }
     }
 
-    public sendSolution(solution: any = this.solution): Observable<any> {
+    public async sendSolutionToSever(solution: any = this.solution): Promise<any> {
         console.log(this.serverAdress)
+        console.log(solution)
+        try {
+            request({
+                url: this.serverAdress,
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                content: JSON.stringify(this.solution)
+            }).then((response) => {
+                console.log(response);
+                const result = response.content.toJSON();
+            }, (e) => {
+                alert(e)
+            });
 
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json',
-            })
-        };
-        return this.client.post(this.serverAdress, JSON.stringify(solution), httpOptions).pipe(
-            catchError(this.handleError)
-        );
+        } catch (error) {
+            alert(error)
+        }
+
+
     }
 
     handleErrors(error: Response) {

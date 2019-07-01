@@ -1,7 +1,7 @@
 export const data_user_simple_1 = [{
-	name: "Einkaufsliste",
-	src: "",
-	description: `
+    name: "Einkaufsliste",
+    src: "",
+    description: `
 			<!doctype html>
 			<html lang="en">
 			<head>
@@ -10,7 +10,7 @@ export const data_user_simple_1 = [{
 				<title>cceos</title>
 			</head>
 			<body>
-			<div style="font-size: 18px">
+			<div style="font-size: 30px">
 			<ul> 
 				<li>Kryptonit 10µg</li>
             	<li>Fischfutter 2x</li>
@@ -19,14 +19,27 @@ export const data_user_simple_1 = [{
             Zum Frühstück trinke ich einen Pott Kaffee <img src="./assets/kaffee.svg" width="40px" height="40px" alt="">  und einen Espresso <img src="./assets/espresso.svg" width="40px" height="40px" alt="">. 
             Oder ich trinke einen Pott Kaffee und einen Latte Macchiato <img src="./assets/latte.svg" width="40px" height="40px" alt="">.
             Was ist das Fazit?
+          	</li>
+			</ul>
+			</div>
+			</body</html>
 `       }, {
-	name: "Hinweis",
-	src: "",
-	description: `<html> Wenn 7 Tassen stehen, erlangst du nach 10 Sekunden die Erleuchtung.</html>  `}];
+    name: "Hinweis",
+    src: "",
+    description: `<!doctype html>
+			<html lang="en">
+			<head>
+				<meta charset="utf-8">
+				<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=yes">
+				<title>cceos</title>
+			</head>
+            <body>
+            <div style="font-size: 30px">Nach 7 Tassen und ein wenig Geduld erlangt man die Erleuchtung, oder eben auch nicht...<div>
+            <body></html>  `}];
 export const data_user_simple_2 = [{
-	name: "Einkaufsliste",
-	src: "",
-	description: `
+    name: "Einkaufsliste",
+    src: "",
+    description: `
 			<!doctype html>
 			<html lang="en">
 			<head>
@@ -35,7 +48,7 @@ export const data_user_simple_2 = [{
 				<title>cceos</title>
 			</head>
 			<body>
-			<div style="font-size: 18px">
+			<div style="font-size: 30px">
 			<ul> 
 				<li>Kryptonit 10µg</li>
             	<li>Fischfutter 2x</li>
@@ -49,14 +62,22 @@ export const data_user_simple_2 = [{
 			</div>
 			</body</html>
 	`      }, {
-	name: "Hinweis",
-	src: "",
-	description: `<html> Wenn 7 Tassen stehen, erlangst du nach 10 Sekunden die Erleuchtung.</html>  `
+    name: "Hinweis",
+    src: "",
+    description: `<!doctype html>
+			<html lang="en">
+			<head>
+				<meta charset="utf-8">
+				<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=yes">
+				<title>cceos</title>
+			</head>
+            <body><div style="font-size: 30px">Nach 7 Tassen und ein wenig Geduld erlangt man die Erleuchtung, oder eben auch nicht...
+            <div></body></html>  `
 }];
 export const data_user_middle_1 = [{
-	name: "Einkaufsliste",
-	src: "",
-	description: `
+    name: "Einkaufsliste",
+    src: "",
+    description: `
 			<!doctype html>
 			<html lang="en">
 			<head>
@@ -65,7 +86,7 @@ export const data_user_middle_1 = [{
 				<title>cceos</title>
 			</head>
 			<body>
-			<div style="font-size: 18px">
+			<div style="font-size: 30px">
 			<ul> 
 				<li>Kryptonit 10µg</li>
             	<li>Fischfutter 2x</li>
@@ -76,18 +97,25 @@ export const data_user_middle_1 = [{
             	Was ist das Fazit?
 			</li>
 			</ul>
-			</div>
-			</body</html>
+			</div></body</html>
 	`
 }, {
-	name: "Hinweis",
-	src: "",
-	description: `<html> Wenn 7 Tassen stehen, erlangst du nach 10 Sekunden die Erleuchtung.</html>  `
+    name: "Hinweis",
+    src: "",
+    description: `<!doctype html>
+			<html lang="en">
+			<head>
+				<meta charset="utf-8">
+				<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=yes">
+				<title>cceos</title>
+			</head>
+            <body><div style="font-size: 30px"><div style="font-size: 30px">Nach 7 Tassen und ein wenig Geduld erlangt man die Erleuchtung, oder eben auch nicht...
+            </div></body></html>  `
 }];
 export const data_user_middle_2 = [{
-	name: "Einkaufsliste",
-	src: "",
-	description: `
+    name: "Einkaufsliste",
+    src: "",
+    description: `
 			<!doctype html>
 			<html lang="en">
 			<head>
@@ -96,7 +124,7 @@ export const data_user_middle_2 = [{
 				<title>cceos</title>
 			</head>
 			<body>
-			<div style="font-size: 18px">
+			<div style="font-size: 30px">
 			<ul> 
 				<li>Kryptonit 10µg</li>
             	<li>Fischfutter 2x</li>
@@ -109,16 +137,26 @@ export const data_user_middle_2 = [{
 			</ul>
 			</div>
 			</body</html>
- `       },
+ 
+            `
+},
 {
-	name: "Hinweis",
-	src: "",
-	description: `<html> Wenn 7 Tassen stehen, erlangst du nach 10 Sekunden die Erleuchtung.</html>  `
+    name: "Hinweis",
+    src: "",
+    description: `<!doctype html>
+			<html lang="en">
+			<head>
+				<meta charset="utf-8">
+				<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=yes">
+				<title>cceos</title>
+			</head>
+            <body><div style="font-size: 30px">Nach 7 Tassen und ein wenig Geduld erlangt man die Erleuchtung, oder eben auch nicht...
+            <div></body></html>  `
 }];
 export const data_user_hard_1 = [{
-	name: "Einkaufsliste",
-	src: "",
-	description: `
+    name: "Einkaufsliste",
+    src: "",
+    description: `
 			<!doctype html>
 			<html lang="en">
 			<head>
@@ -127,7 +165,7 @@ export const data_user_hard_1 = [{
 				<title>cceos</title>
 			</head>
 			<body>
-			<div style="font-size: 18px">
+			<div style="font-size: 30px">
 			<ul> 
 				<li>Kryptonit 10µg</li>
             	<li>Fischfutter 2x</li>
@@ -141,14 +179,22 @@ export const data_user_hard_1 = [{
 			</body</html>
 	`
 }, {
-	name: "Hinweis",
-	src: "",
-	description: `<html>Wenn 7 Tassen stehen, erlangst du nach 10 Sekunden die Erleuchtung.</html>  `
+    name: "Hinweis",
+    src: "",
+    description: `<!doctype html>
+			<html lang="en">
+			<head>
+				<meta charset="utf-8">
+				<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=yes">
+				<title>cceos</title>
+			</head>
+            <body><div style="font-size: 30px">Nach 7 Tassen und ein wenig Geduld erlangt man die Erleuchtung, oder eben auch nicht...
+            <div></body></html>  `
 }];
 export const data_user_hard_2 = [{
-	name: "Einkaufsliste",
-	src: "",
-	description: `
+    name: "Einkaufsliste",
+    src: "",
+    description: `
 			<!doctype html>
 			<html lang="en">
 			<head>
@@ -157,7 +203,7 @@ export const data_user_hard_2 = [{
 				<title>cceos</title>
 			</head>
 			<body>
-			<div style="font-size: 18px">
+			<div style="font-size: 30px">
 			<ul> 
 				<li>Kryptonit 10µg</li>
             	<li>Fischfutter 2x</li>
@@ -172,16 +218,24 @@ export const data_user_hard_2 = [{
 			</body</html>
  `       },
 {
-	name: "Hinweis",
-	src: "",
-	description: `<html>
-			Wenn 7 Tassen stehen, erlangst du nach 10 Sekunden die Erleuchtung.
-			</html>  `
+    name: "Hinweis",
+    src: "",
+    description: `<!doctype html>
+			<html lang="en">
+			<head>
+				<meta charset="utf-8">
+				<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=yes">
+				<title>cceos</title>
+			</head>
+			<body>
+            <div style="font-size: 30px">Nach 7 Tassen und ein wenig Geduld erlangt man die Erleuchtung, oder eben auch nicht...
+            <div>
+            </body</html> `
 },
 {
-	name: "Webseite",
-	src: "",
-	description: 'https://www.htw-dresden.de'
+    name: "Webseite",
+    src: "",
+    description: 'https://www.htw-dresden.de'
 }];
 
 //K Kaffee E Espresso L Latte Macchiato W Wasser

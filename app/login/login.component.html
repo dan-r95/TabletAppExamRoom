@@ -5,8 +5,11 @@
 	<ScrollView class="page">
 		<StackLayout class="home-panel">
 			<Image src="res://ic_launcher" stretch="aspectFit" class="img" ></Image> 
-			<TextField  [(ngModel)]="user.password" #password hint="****" secure="true"  [maxLength]="lengthVar" (returnPress)="login()"></TextField>
-			<Button text="Sign in" (tap)="login()"></Button>
+             <Label text="Bitte Code eingeben" textWrap="true" class='bigText'></Label>
+            <TextField class='input text-center' [(ngModel)]="user.password" #password hint="****" secure="true"  [maxLength]="lengthVar" (returnPress)="login()"></TextField>
+			<Button text="Sign in" (tap)="login()" class="brownButton"></Button>
 		</StackLayout>
 	</ScrollView>
 </Page>
+
+

@@ -4,6 +4,8 @@ Contains
 * Code for the app
 * Code for the python programm running on a raspberry pi
 
+The python HTTP server has a configured `HOST` and `PORT`, in the app you have to edit the `serverAdress` variable in `user.service`.
+
 
 ## Getting started
 It is assumed that you have installed and configured NativeScript properly. If not, head to https://docs.nativescript.org/start/quick-setup and validate its correct functionality.
@@ -21,4 +23,4 @@ To start the emulator with this repository:
 * Format python code: ```autopep8 --in-place --aggressive --aggressive <filename>```
 * This project has been developed with [Visual Studio Code](https://code.visualstudio.com/) and the [NativeScript extension](https://www.nativescript.org/nativescript-for-visual-studio-code).
 
-<div>Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+<div>Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/"                 title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>

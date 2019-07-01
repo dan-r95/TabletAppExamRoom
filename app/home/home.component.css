@@ -1,4 +1,13 @@
 .left-column {
     border-color: #d3d3d3;
     border-right-width: 1;
+    font-size: 24px;
+}
+
+.blackIcon {
+    color: black
+}
+
+.bigText {
+    font-size: 28px;
 }

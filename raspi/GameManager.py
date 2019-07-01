@@ -6,8 +6,8 @@ import socket
 from io import BytesIO
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from select import select
-import evdev
-from evdev import InputDevice, categorize, ecodes
+#import evdev
+#from evdev import InputDevice, categorize, ecodes
 import glob
 from os import listdir
 from os.path import isfile, join
@@ -53,7 +53,7 @@ class GameManager:
         # register all found devices
 
         # find devices we need (keyboard rfid reader) from /dev/input
-     
+
         # add devices here
         self.devices = map(InputDevice, devices)
         self.devicesMap = map(InputDevice, devices)
@@ -64,43 +64,7 @@ class GameManager:
         # for i in self.devices:
         #    print(i)
 
-        self.idealCombination = self.initializeSolutionCombination(
-            self.devices, solution)
         self.readCombination = self.initializeCombination(self.devices)
-
-    # initialize the correct pairs and to be read pairs
-    # TODO: expand with parameters: number of readers and codes which are the
-    # solution
-
-    @classmethod
-    def initializeSolutionCombination(cls, devices, solution):
-        # TODO: pass an object with the solution!
-        # init values which are the solution
-
-        # FORMAT
-        # id                reader                  solution
-        #  3   usb-3f980000.usb-1.2.4/input0        0010210257
-
-        # print(devices.values())
-
-        # the codes to unlock for each reader
-        assert len(solution) == len(
-            devices), "length must be equal of solution provided and number of devices"
-
-        keys = list(devices.keys())   # to have an index we can read from
-        reader = [None] * len(devices)   # fill the reader object
-        j = 0
-        for i in keys:
-            reader[j] = devices[i].path
-            j += 1
-
-        idealCombination = {
-            "key": keys,
-            "deviceName": reader,
-            "value": solution  # passed solution dict
-        }
-
-        return idealCombination
 
     @classmethod
     def initializeCombination(cls, devices):
@@ -133,7 +97,7 @@ class GameManager:
 
     @staticmethod
     # return true if both objects have the same values
-    def checkIfOkay(self, ideal, read):
+    def mapAllCodesToSymbols(self):
         convertedSymbols = ''
         for item in self.readCombination['value']:
             convertedSymbols += self.mapInputToSymbol(item)
@@ -186,15 +150,14 @@ class GameManager:
                         # create and dump the tag
                         tag = "".join(i.strip('KEY_') for i in container)
                         devicePhysName = device.path
-                        print(devicePhysName)
                         self.checkIfDuplicateAndIfDelete(tag)
                         self.writeToDictionary(
                             devicePhysName, tag, self.readCombination)
                         # returns true if both data structures have equal values
                         # if all keys are filled
                         if self.checkIfAllSlotsAreFilled():
-                            actualSolution = self.checkIfOkay(
-                                self, self.idealCombination, self.readCombination)
+                            actualSolution = self.mapAllCodesToSymbols(
+                                self)
                             print(actualSolution)
 
                             result = self.getWolframOutput(solution["param1"], solution["param2"], solution["param3"], solution["param4"],
@@ -240,7 +203,7 @@ class GameManager:
             ','+solution+']//TautologyQ'
         return check_output([command, parameters])
         #proc = subprocess.Popen([command], stdin=PIPE, stdout=PIPE)
-        #return call([command, parameter])
+        # return call([command, parameter])
 
     # opens a subprocess which calls the funk module sending data to the power supply
     @classmethod
@@ -254,16 +217,18 @@ class GameManager:
 '''
 	Simple socket server using threads
 '''
+
+
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
     # should use this to reset server
     def do_GET(self):
         self.send_response(200)
         self.end_headers()
         # exit(0)
-        
-    #def sendToClient(self, message):
-     #       
-        #self.send_content('192.168.
+
+    # def sendToClient(self, message):
+     #
+        # self.send_content('192.168.
        # httpd
 
     def do_POST(self):
@@ -294,13 +259,13 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         solution = ["0000405226", "0010247315", "0010210257",
                     "0010086746", "0010203880", "0010181421", "0010217966"]
         devices = ['/dev/input/by-path/platform-3f980000.usb-usb-0:1.2:1.0-event-kbd',
-                '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.3:1.0-event-kbd',
-                '/dev/input/by-path/platform-3f980000.usb-usb-0:1.3:1.0-event-kbd',
-                '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.1:1.0-event-kbd',
-                '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.2:1.0-event-kbd',
-                '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.3:1.0-event-kbd',
-                '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.4:1.0-event-kbd',
-                ]
+                   '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.3:1.0-event-kbd',
+                   '/dev/input/by-path/platform-3f980000.usb-usb-0:1.3:1.0-event-kbd',
+                   '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.1:1.0-event-kbd',
+                   '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.2:1.0-event-kbd',
+                   '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.3:1.0-event-kbd',
+                   '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.4:1.0-event-kbd',
+                   ]
         g.getDevices(solution, devices)
         # loop until input
         g.beginReading(params, devices)
@@ -326,11 +291,8 @@ codes = {
     '0010042671': 'K'
 }
 
-print(codes)
-print(codes['0010059599'])
 
-
-HOST = '192.168.43.9'  # Symbolic name, meaning all available interfaces
+HOST = ''  # Symbolic name, meaning all available interfaces
 PORT = 8888  # Arbitrary non-privileged port
 # Run the whole program
 httpd = HTTPServer((HOST, PORT), SimpleHTTPRequestHandler)
