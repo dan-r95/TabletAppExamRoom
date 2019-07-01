@@ -6,8 +6,8 @@ import socket
 from io import BytesIO
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from select import select
-#import evdev
-#from evdev import InputDevice, categorize, ecodes
+import evdev
+from evdev import InputDevice, categorize, ecodes
 import glob
 from os import listdir
 from os.path import isfile, join
@@ -49,20 +49,13 @@ class GameManager:
 
     # Fill devices
     @classmethod
-    def getDevices(self, solution, devices):
+    def getDevices(self, devices):
         # register all found devices
-
-        # find devices we need (keyboard rfid reader) from /dev/input
-
         # add devices here
         self.devices = map(InputDevice, devices)
         self.devicesMap = map(InputDevice, devices)
 
         self.devices = {dev.fd: dev for dev in self.devices}
-
-        # ATTENTION the index does not start at zero here! - passed key to the list object
-        # for i in self.devices:
-        #    print(i)
 
         self.readCombination = self.initializeCombination(self.devices)
 
@@ -224,12 +217,6 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
         self.end_headers()
-        # exit(0)
-
-    # def sendToClient(self, message):
-     #
-        # self.send_content('192.168.
-       # httpd
 
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
@@ -241,10 +228,6 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.end_headers()
         self.handleJson(json)
-        #thread = Thread(target = self.handleJson, args = (json ))
-        # thread.start()
-        # thread.join()
-        #print("thread finished...exiting")
 
     def handleJson(self, body):
         # MAIN LOOP
@@ -254,10 +237,9 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
         # UPDATE the SOLUTION we need!
         g = GameManager()
+        # power off at the start of the riddle
         g.callPower("00011", "0")
-        # fill our solution here
-        solution = ["0000405226", "0010247315", "0010210257",
-                    "0010086746", "0010203880", "0010181421", "0010217966"]
+        # correct order devices from 1...7
         devices = ['/dev/input/by-path/platform-3f980000.usb-usb-0:1.2:1.0-event-kbd',
                    '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.3:1.0-event-kbd',
                    '/dev/input/by-path/platform-3f980000.usb-usb-0:1.3:1.0-event-kbd',
@@ -266,7 +248,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                    '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.3:1.0-event-kbd',
                    '/dev/input/by-path/platform-3f980000.usb-usb-0:1.1.2.4:1.0-event-kbd',
                    ]
-        g.getDevices(solution, devices)
+        g.getDevices(devices)
         # loop until input
         g.beginReading(params, devices)
 
