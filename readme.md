@@ -46,7 +46,7 @@ Ueber die oben erlangte IP des raspberrys koennen wir nun die IP im VNC Client e
 
 ### Probleme?
 Sollte das Probleme machen den Pi ins selbe Wifi einzuwaehlen, kann man auch per usb ueber ssh auf den raspberry verbinden und dann die `wpa config` anpassen.
-
+iwi
 https://desertbot.io/blog/ssh-into-pi-zero-over-usb
 
 
@@ -54,7 +54,7 @@ https://desertbot.io/blog/ssh-into-pi-zero-over-usb
 
 Nun muessen wir noch in der App die IP Adresse des PCs anpassen, die wir vorhin per `ipconfig` bekommen haben.
 Also die Datei `app/services/user.service` anpassen und die variable `this.serverAdress` aendern. 
-
+**Die app muss dann neu gebaut werden!** (Siehe Punkt Getting started - App ).
 
 
 Weitere Raetsel koennen in der `app/data.ts` eingetragen werden.
