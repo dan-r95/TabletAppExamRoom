@@ -1,9 +1,10 @@
-import { NgModule, NgModuleFactoryLoader, NO_ERRORS_SCHEMA } from "@angular/core";
+import { NgModule, NO_ERRORS_SCHEMA } from "@angular/core";
 import { NativeScriptModule } from "nativescript-angular/nativescript.module";
-import { NativeScriptHttpModule } from "nativescript-angular/http";
-import { HttpClientModule } from '@angular/common/http';
+import { NativeScriptHttpClientModule } from "nativescript-angular/http-client";
+
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
+import { UserService } from "./services/user.service";
 
 @NgModule({
     bootstrap: [
@@ -12,14 +13,17 @@ import { AppComponent } from "./app.component";
     imports: [
         NativeScriptModule,
         AppRoutingModule,
-		NativeScriptHttpModule,
-		HttpClientModule
+        NativeScriptHttpClientModule,
+
     ],
     declarations: [
         AppComponent
     ],
     schemas: [
         NO_ERRORS_SCHEMA
+    ],
+    providers: [
+    UserService
     ]
 })
 export class AppModule { }

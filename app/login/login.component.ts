@@ -2,8 +2,7 @@ import { Component, ViewChild, ElementRef } from "@angular/core";
 import { UserService } from "~/services/user.service"
 import { User } from "../user";
 import { Router } from "@angular/router";
-import { Feedback, FeedbackType, FeedbackPosition } from "nativescript-feedback";
-import { TextField } from "tns-core-modules/ui/text-field";
+import { Feedback } from "nativescript-feedback";
 
 @Component({
     selector: "Login",
@@ -55,7 +54,7 @@ export class LoginComponent {
             this.feedback.success({ message: "Korrekt! :)", duration: 1000 });
             console.log('success now sending solution!')
             this.userService.setUser(this.user)
-            this.userService.setSolution(this.user);
+            this.userService.setSolution();
             this.userService.sendSolutionToSever();
             this.router.navigate(["/home", { id: this.user.password }]);
         } else {

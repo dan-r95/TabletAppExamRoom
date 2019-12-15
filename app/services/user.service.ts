@@ -1,11 +1,8 @@
 import { Injectable } from "@angular/core";
-import { Http, Response } from "@angular/http";
-import { request, getFile, getImage, getJSON, getString } from "tns-core-modules/http";
-import { Observable, throwError, of } from "rxjs";
-import { catchError, map, tap } from "rxjs/operators";
-import { Feedback, FeedbackType, FeedbackPosition } from "nativescript-feedback";
+import { Response } from "@angular/http";
+import { request } from "tns-core-modules/http";
+import { Observable } from "rxjs";
 import { User } from "../user";
-import * as dialogs from "tns-core-modules/ui/dialogs";
 import { solution_simple_1, solution_simple_2, solution_middle_1, solution_middle_2, solution_hard_1, solution_hard_2 } from '../data'
 
 @Injectable({
@@ -15,11 +12,9 @@ export class UserService {
 
     serverAdress: string;
     user: User;
-    private feedback: Feedback
     solution: any;
 
-    constructor(private http: Http) {
-        this.feedback = new Feedback();
+    constructor() {
         this.serverAdress = 'http://192.168.43.9:8888'
     }
 
@@ -35,7 +30,8 @@ export class UserService {
         return this.user
     }
 
-    public setSolution(user: User): void {
+    public setSolution(): void {
+        console.log(this.user.password);
         if (this.user.password !== undefined) {
             switch (this.user.password) {
                 case '1234':

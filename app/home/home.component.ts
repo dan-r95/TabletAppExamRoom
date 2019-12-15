@@ -1,14 +1,12 @@
 import { Component, OnInit } from "@angular/core";
-import { Router, NavigationExtras, ActivatedRoute, NavigationEnd } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 import { DeviceType } from "tns-core-modules/ui/enums";
 import { device } from "tns-core-modules/platform";
-import { WebView, LoadEventData } from "tns-core-modules/ui/web-view";
+import { WebView } from "tns-core-modules/ui/web-view";
 import { Page } from "tns-core-modules/ui/page";
-import { isIOS, isAndroid } from "tns-core-modules/platform"
+import { isAndroid } from "tns-core-modules/platform"
 import { UserService } from "~/services/user.service";
 import * as data from '../data'
-import { catchError } from "rxjs/operators";
-import { RouterExtensions } from "nativescript-angular";
 import * as application from "tns-core-modules/application";
 import { AndroidApplication, AndroidActivityBackPressedEventData } from "tns-core-modules/application";
 
@@ -36,6 +34,7 @@ export class HomeComponent implements OnInit {
 
 
     select(args) {
+        console.log("select" + this.selectedUser);
         switch (this.selectedUser) {
             case '1234':
                 this.selected = data.data_user_simple_1[args.index]; break;
@@ -122,7 +121,6 @@ export class HomeComponent implements OnInit {
 export function onWebViewLoaded(webargs) {
     console.log('webview loaded')
     const page: Page = <Page>webargs.object.page;
-    const vm = page.bindingContext;
     const webview: WebView = <WebView>webargs.object;
     console.log(webview.android.getSettings)
     if (isAndroid) {

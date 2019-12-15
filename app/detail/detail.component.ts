@@ -1,7 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { WebView } from "tns-core-modules/ui/web-view";
-import { Router, NavigationExtras, NavigationEnd } from "@angular/router";
+import { Router } from "@angular/router";
 import { UserService } from "~/services/user.service";
 
 @Component({
